@@ -1,0 +1,23 @@
+.layout {
+  z-index: 1;
+  .content {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    
+    .main-content {
+      margin-top: 60px;
+      height:100vh;
+      padding: 0rem 0rem 1rem 0rem;
+      background-color: #e8eff9;
+      
+    }
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+}
