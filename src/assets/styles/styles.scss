@@ -231,12 +231,15 @@ a {
   justify-content: center;
   text-align: center;
 }
-.p-sidebar-header{
-  
+.p-sidebar .p-sidebar-header{
+  padding-bottom:0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   .p-sidebar-header-content{
     width: 100%;
   }
+}
+.p-sidebar-content{
+  background-color:$bg-silver
 }

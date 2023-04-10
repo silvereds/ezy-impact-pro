@@ -132,22 +132,36 @@ watch(store.data , (newData , prevData)=>{
         </Dialog>
         <Sidebar v-model:visible="showDetail" style="width:50vw">
             <template #header>
-                <div class="flex-row-between ">
-                    <h2> Détail  </h2>
+                <div class="flex-row-between justify-content-end">
+                    <!-- <h2> Détail  </h2> -->
                     <div class=" flex flex-row " style="margin-right:2rem">
+                        <Button 
+                            :style="{borderBottom:activeIndex === 0 ? '2px solid #636564':null,color:'#636564'}"
+                            text 
+                            label="Detail" 
+                            icon="pi pi-check"  
+                            @click="onSwipe(0)" 
+                        />
                         <Button 
                             :style="{borderBottom:activeIndex === 1 ? '2px solid #636564':null,color:'#636564'}"
                             text 
-                            label="Valider" 
-                            icon="pi pi-check"  
+                            label="Editer" 
+                            icon="pi pi-pencil"  
                             @click="onSwipe(1)" 
                         />
                         <Button 
                             :style="{borderBottom:activeIndex === 2 ? '2px solid #636564':null,color:'#636564'}"
                             text 
-                            label="Editer" 
-                            icon="pi pi-pencil" 
+                            label="Validation" 
+                            icon="pi pi-check" 
                             @click="onSwipe(2)" 
+                        />
+                        <Button 
+                            :style="{borderBottom:activeIndex === 3 ? '2px solid #636564':null,color:'#636564'}"
+                            text 
+                            label="Déclaration" 
+                            icon="ri-list-check" 
+                            @click="onSwipe(3)" 
                         />
                     </div>
                     
@@ -161,20 +175,17 @@ watch(store.data , (newData , prevData)=>{
             >
                 <swiper-slide>
                     <div>
-                        lorem ipsun dollor loren ipsu dolor
-                        lorem ipsun dollor loren ipsu dolor
-                        lorem ipsun dollor loren ipsu dolor
-                        lorem ipsun dollor loren ipsu dolor
-                        lorem ipsun dollor loren ipsu dolor
-                        lorem ipsun dollor loren ipsu dolorå
+                        Page des détails
                     </div>
+                </swiper-slide>
+                <swiper-slide>
+                    <AddEdit />
                 </swiper-slide>
                 <swiper-slide>
                     <ValidationForm />
                 </swiper-slide>
                 <swiper-slide>
-                    <Button icon="pi pi-angle-left" severity="success" rounded aria-label="Search" @click="onSwipe(0)" />
-                    <AddEdit />
+                    <ValidationForm />
                 </swiper-slide>
             </Swiper>
         </Sidebar>
