@@ -10,8 +10,7 @@ import useUiStore from "@/stores/ui";
 
 const store = fixeEqStore()
 const ui = useUiStore()
-
-const props = defineProps<{defaultId?:string}>()
+const props = defineProps<{defaultId?:string, callback?:()=>void}>()
 const {building, units , fuelUsed, type, owner , declarer } = storeToRefs(ui)
 
 const data = reactive({
@@ -32,7 +31,7 @@ onMounted(()=>{
     }
 })
 
-const onSave = ()=>store.addData(data)
+const onSave = ()=>{store.addData(data), props?.callback?.(), console.log("calling of callback")}
 
 
 </script>

@@ -1,30 +1,18 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 //  swiper for animation here
-import { Swiper, SwiperSlide  } from 'swiper/vue';
-import { Controller } from 'swiper';
-import 'swiper/css';
+
 
 import {ref, watch} from "vue";
-import Sidebar from 'primevue/sidebar';
 import ConfirmDialog from 'primevue/confirmdialog';
-import Button from "primevue/button";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
-import ValidationForm from "@/components/ValidationForm.vue";
 import Dialog from "primevue/dialog";
 import { useConfirm } from "primevue/useconfirm";
 import AddEdit from "./components/AddEdit.vue";
 import fixeEqStore from "@/stores/equipments/fixeEqStore";
 import {storeToRefs} from "pinia";
-
-const swipe = ref<any>(null)
-const activeIndex = ref<number|null>(null)
-const setSwiper = (swiper:any) => swipe.value = swiper
-const onSwipe = (index:number)=>{
-    activeIndex.value = index
-    swipe.value?.slideTo(index)
-}
+import Drawer from "@/components/Drawer.vue"
 
 const store = fixeEqStore()
 const {data} = storeToRefs(store)
@@ -75,12 +63,6 @@ const columns = [
   {title:"Type de propriété" , key:"ownerType"},
 ];
 
-watch(store.data , (newData , prevData)=>{
-    console.log("prev data", prevData)
-    console.log("new data", newData)
-
-})
-
 
 </script>
 <template>
@@ -107,7 +89,7 @@ watch(store.data , (newData , prevData)=>{
                 title="Équipements fixes" 
                 subtitle="ce tableau liste tous les équipements fixes" 
                 :columns="columns.filter((el)=>el.show)" 
-                :data="store.data"
+                :data="data"
                 :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
                 :onDelete="onDelete"
@@ -124,71 +106,24 @@ watch(store.data , (newData , prevData)=>{
         >
             <template #header>
                 <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
-                <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
+                    <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
                     <span style="font-size:18px;font-weight:600"> Nouvel Equipement fixe  </span>
                 </div>
             </template>
-            <AddEdit />
+            <AddEdit :callback="()=>open = false" />
         </Dialog>
-        <Sidebar v-model:visible="showDetail" style="width:50vw">
-            <template #header>
-                <div class="flex-row-between justify-content-end">
-                    <!-- <h2> Détail  </h2> -->
-                    <div class=" flex flex-row " style="margin-right:2rem">
-                        <Button 
-                            :style="{borderBottom:activeIndex === 0 ? '2px solid #636564':null,color:'#636564'}"
-                            text 
-                            label="Detail" 
-                            icon="pi pi-check"  
-                            @click="onSwipe(0)" 
-                        />
-                        <Button 
-                            :style="{borderBottom:activeIndex === 1 ? '2px solid #636564':null,color:'#636564'}"
-                            text 
-                            label="Editer" 
-                            icon="pi pi-pencil"  
-                            @click="onSwipe(1)" 
-                        />
-                        <Button 
-                            :style="{borderBottom:activeIndex === 2 ? '2px solid #636564':null,color:'#636564'}"
-                            text 
-                            label="Validation" 
-                            icon="pi pi-check" 
-                            @click="onSwipe(2)" 
-                        />
-                        <Button 
-                            :style="{borderBottom:activeIndex === 3 ? '2px solid #636564':null,color:'#636564'}"
-                            text 
-                            label="Déclaration" 
-                            icon="ri-list-check" 
-                            @click="onSwipe(3)" 
-                        />
-                    </div>
-                    
+        <Drawer :onClose="()=>showDetail = false" :visible="showDetail" selectedId="">
+            <template v-slot:detail>
+                <div>
+                    détail
                 </div>
             </template>
-            <Swiper
-                :slides-per-view="1"
-                :space-between="50"
-                :modules="[Controller]" 
-                @swiper="setSwiper"
-            >
-                <swiper-slide>
-                    <div>
-                        Page des détails
-                    </div>
-                </swiper-slide>
-                <swiper-slide>
+            <template v-slot:update>
+                <div>
                     <AddEdit />
-                </swiper-slide>
-                <swiper-slide>
-                    <ValidationForm />
-                </swiper-slide>
-                <swiper-slide>
-                    <ValidationForm />
-                </swiper-slide>
-            </Swiper>
-        </Sidebar>
+                </div>
+            </template>
+        </Drawer>
     </div>
     
 </template>

@@ -1,6 +1,6 @@
 $sidebar-width: 270px;
 $sidebar-collapsed-width: 80px;
-$bg-silver : #e8eff9;
+$bg-silver: #e8eff9;
 @import 'css-pro-layout/dist/scss/css-pro-layout.scss';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import './remixicon/remixicon.css';
@@ -11,27 +11,26 @@ $bg-silver : #e8eff9;
 @import './header';
 @import './loader';
 
-
 * {
   box-sizing: border-box;
 }
-.bg-primary{
-  background-color:$bg-color
+.bg-primary {
+  background-color: $bg-color;
 }
-.bg-silver{
+.bg-silver {
   background-color: $bg-silver;
 }
-.w-100{
-  width:100%;
+.w-100 {
+  width: 100%;
 }
-.mt-1{
-  margin-top:1rem;
+.mt-1 {
+  margin-top: 1rem;
 }
-.mt-2{
-  margin-top:2rem;
+.mt-2 {
+  margin-top: 2rem;
 }
-.mt-3{
-  margin-top:3rem;
+.mt-3 {
+  margin-top: 3rem;
 }
 
 body {
@@ -41,8 +40,8 @@ body {
   color: #3f4750;
   font-size: 0.9rem;
 }
-.bg-silver{
-  background-color:#E5E3F1;
+.bg-silver {
+  background-color: #e5e3f1;
 }
 
 a {
@@ -203,10 +202,10 @@ a {
   align-items: center;
   justify-content: space-between;
 }
-.p-inline{
+.p-inline {
   padding-inline: 1rem;
 }
-.pa-2{
+.pa-2 {
   padding: 1rem;
 }
 .dropdown-link {
@@ -217,29 +216,33 @@ a {
   border-bottom: 1px solid #eef0fa;
   width: 100%;
   padding-left: 1rem;
-  color:#000
+  color: #000;
 }
-.dropdown-icon{
+.dropdown-icon {
   display: flex;
   align-items: center;
   margin-right: 1rem;
 }
-.dropdown-notif{
-  padding:1rem;
+.dropdown-notif {
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
-.p-sidebar .p-sidebar-header{
-  padding-bottom:0;
+.p-sidebar .p-sidebar-header {
+  padding-bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .p-sidebar-header-content{
+  .p-sidebar-header-content {
     width: 100%;
   }
 }
-.p-sidebar-content{
-  background-color:$bg-silver
+.p-sidebar .p-sidebar-content {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
 }

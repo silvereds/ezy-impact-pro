@@ -99,7 +99,7 @@ import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown'  // optional
 import EmptyImage from '@/assets/icons/empty.vue';
 
-import STATUS from "@/dataType"
+import STATUS from "@/index.js"
 import { ref , watch} from 'vue';
 
 const dt = ref()
