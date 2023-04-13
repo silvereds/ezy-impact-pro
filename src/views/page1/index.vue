@@ -3,14 +3,14 @@
 //  swiper for animation here
 
 
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import ConfirmDialog from 'primevue/confirmdialog';
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
 import Dialog from "primevue/dialog";
 import { useConfirm } from "primevue/useconfirm";
 import AddEdit from "./components/AddEdit.vue";
-import fixeEqStore from "@/stores/equipments/fixeEqStore";
+import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
 

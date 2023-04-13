@@ -14,9 +14,9 @@ import Dashboard from '../views/dashboard/index.vue'
 import NotFound from '../views/notFound/NotFound.vue'
 import useUiStore from '@/stores/ui'
 import useAuthStore from '@/stores/authStore'
-import Login from "../views/auth/Login.vue"
+import Login from '../views/auth/Login.vue'
 
-function requireAuth(to:any) {
+function requireAuth(to: any) {
   // const accessToken = import.meta.env.VITE_ACCESS_TOKEN
   const auth = useAuthStore()
   const ui = useUiStore()
@@ -32,9 +32,9 @@ function requireAuth(to:any) {
 
 const authRoute = [
   {
-    path: "/Login",
+    path: '/Login',
     name: 'Login',
-    component: Login,
+    component: Login
   }
 ]
 

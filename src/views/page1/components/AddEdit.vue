@@ -2,10 +2,10 @@
 import {onMounted} from "vue"
 import InputText from "primevue/inputtext";
 import Dropdown from 'primevue/dropdown';
-import {reactive , ref} from "vue";
+import {reactive} from "vue";
 import Button from "primevue/button"
 import {storeToRefs} from "pinia";
-import fixeEqStore from "@/stores/equipments/fixeEqStore";
+import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
 
 const store = fixeEqStore()
@@ -31,7 +31,10 @@ onMounted(()=>{
     }
 })
 
-const onSave = ()=>{store.addData(data), props?.callback?.(), console.log("calling of callback")}
+const onSave = ()=>{
+    store.addData(data);
+    props?.callback?.()
+}
 
 
 </script>
@@ -91,7 +94,7 @@ const onSave = ()=>{store.addData(data), props?.callback?.(), console.log("calli
             
         </div>
         <div class="flex flex-row align-items-center justify-content-center mt-3">
-            <Button label="enregister" @click="onSave()"  />
+            <Button label="enregister" @click="onSave()" :loading="store.loading"  />
         </div>
     </div>
 </template>

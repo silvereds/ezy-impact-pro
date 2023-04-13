@@ -17,9 +17,9 @@ import 'vue-toastification/dist/index.css'
 
 const app = createApp(App)
 app.use(ConfirmationService)
+app.use(router)
 app.use(Toast)
 // to use router inside pinia store file
 app.use(createPinia().use(({ store }) => (store.router = markRaw(router))))
-app.use(router)
 app.use(PrimeVue)
 app.mount('#app')

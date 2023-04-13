@@ -59,8 +59,7 @@ const useUiStore = defineStore('uiStore', {
         }
       })
     },
-    notifySuccess(message: string | '') {
-      console.log('notify here')
+    notifySuccess({ message = '' }: { message: string }) {
       toast.success(message, innerOption as any)
     },
     notifyError(message: string | '') {
