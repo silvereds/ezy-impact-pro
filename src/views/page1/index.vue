@@ -3,8 +3,7 @@
 //  swiper for animation here
 
 
-import {ref} from "vue";
-import ConfirmDialog from 'primevue/confirmdialog';
+import {ref, onMounted} from "vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
 import Dialog from "primevue/dialog";
@@ -13,15 +12,19 @@ import AddEdit from "./components/AddEdit.vue";
 import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
+import { SCOPE } from "@/dataType";
 
 const store = fixeEqStore()
-const {data} = storeToRefs(store)
+const {data, fetching} = storeToRefs(store)
 
 const confirm = useConfirm();
 
 const searchText = ref(null)
 const open = ref(false)
 const showDetail = ref(false)
+const selectedId= ref<string|undefined>()
+const selectedItem = ref<any>(null)
+
 
 const onStatusChange = (status:string)=>{
     console.log("status here",status)
@@ -47,7 +50,8 @@ console.log("id", id)
 }
 
 const onShow = (id:string)=>{
-    console.log(id)
+    selectedItem.value = (data.value as any)?.[id]
+    selectedId.value = id
     showDetail.value = true;
 }
 
@@ -62,6 +66,8 @@ const columns = [
   { title: "Nom d'équipement", key: "equipmentName", show:true },
   {title:"Type de propriété" , key:"ownerType"},
 ];
+
+onMounted(async ()=> await store.getData())
 
 
 </script>
@@ -89,15 +95,16 @@ const columns = [
                 title="Équipements fixes" 
                 subtitle="ce tableau liste tous les équipements fixes" 
                 :columns="columns.filter((el)=>el.show)" 
-                :data="data"
+                :data="(Object as any).values(data)"
                 :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
                 :onDelete="onDelete"
                 :onShow="onShow"
-                :onEdit="onEdit" 
+                :onEdit="onEdit"
+                :loading="fetching" 
             />
         </div>
-        <ConfirmDialog></ConfirmDialog>
+        
         <Dialog 
             v-model:visible="open" 
             modal 
@@ -112,15 +119,20 @@ const columns = [
             </template>
             <AddEdit :callback="()=>open = false" />
         </Dialog>
-        <Drawer :onClose="()=>showDetail = false" :visible="showDetail" selectedId="">
+        <Drawer 
+            :onClose="()=>showDetail = false" 
+            :visible="showDetail" 
+            :selectedId="selectedId"
+            :category="SCOPE.FIXE_EQUIPMENT"
+        >
             <template v-slot:detail>
                 <div>
-                    détail
+                    {{ selectedItem?.type }}
                 </div>
             </template>
             <template v-slot:update>
                 <div>
-                    <AddEdit />
+                    <AddEdit :itemId="selectedId" />
                 </div>
             </template>
         </Drawer>

@@ -13,7 +13,7 @@ const useAuthStore = defineStore("authStore",{
         login(data:{email:string,password:string}):void{
             this.isAuth = true ;
             sessionStorage.setItem("isAuth","auth-key")
-            this.router.push({name:"dashboard"})
+            this.router.push('/dashboard')
             console.log(data.password,data.email)
         },
         logout():void{

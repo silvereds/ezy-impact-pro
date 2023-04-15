@@ -14,20 +14,21 @@ import Dashboard from '../views/dashboard/index.vue'
 import NotFound from '../views/notFound/NotFound.vue'
 import useUiStore from '@/stores/ui'
 import useAuthStore from '@/stores/authStore'
+import buildingStore from "@/stores/BUILDING/store";
 import Login from '../views/auth/Login.vue'
 
 function requireAuth(to: any) {
   // const accessToken = import.meta.env.VITE_ACCESS_TOKEN
   const auth = useAuthStore()
   const ui = useUiStore()
+  const buildStore = buildingStore()
 
   if (!auth.isAuth && to.name !== 'Login') {
     console.log('not authenticated redirection to login page')
     return { name: 'Login' }
   }
-  if (!ui?.selectable) {
-    ui.getSelectableFields()
-  }
+    buildStore.getData()
+  
 }
 
 const authRoute = [

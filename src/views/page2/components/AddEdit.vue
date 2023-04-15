@@ -5,7 +5,7 @@ import Dropdown from 'primevue/dropdown';
 import {ref} from "vue";
 import Button from "primevue/button"
 import {storeToRefs} from "pinia";
-import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
+import fixeEqStore from "@/stores/MOBILE_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
 
 

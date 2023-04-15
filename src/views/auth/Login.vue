@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import useAuthStore from "@/stores/authStore";
-import InputText from "primevue/inputtext"
-import Button from "primevue/button"
 import {ref} from "vue"
 
 const auth = useAuthStore()
-const data = ref({email:'',password:''})
+const data = ref({email:'impact.cogit@gmail.com',password:'12345678'})
 const login = ()=>{
     auth.login(data.value)
 }
@@ -14,19 +12,40 @@ const login = ()=>{
 </script>
 
 <template>
-    <div class="flex align-items-center justify-content-center bg-primary" style="height:100vh;width:100vw" >
-        <div class="flex flex-row align-items-center justify-content-center ">
-            <div class="m-2 flex align-items-center justify-content-center" style="height:30vw; width:40vh">
-                
-                <h4 class="text-black" style="color:#fff"> Ezy-impact </h4>
+<div class="px-5 min-h-screen flex justify-content-center align-items-center bg-primary">
+    <div class="border-1 surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
+        <div class="mb-4">
+            <div class="text-900 text-xl font-bold mb-2">Log in</div>
+            <span class="text-600 font-medium">Please enter your details</span>
+        </div>
+        <div class="flex flex-column">
+            <span class="p-input-icon-left w-full mb-4">
+                <i class="pi pi-envelope"></i>
+                <input v-model="data.email" class="p-inputtext p-component w-full md:w-25rem" id="email" type="text" placeholder="Email">
+            </span>
+            <span class="p-input-icon-left w-full mb-4">
+                <i class="pi pi-lock"></i>
+                <input v-model="data.password" class="p-inputtext p-component w-full md:w-25rem" id="password" type="password" placeholder="Password">
+            </span>
+            <div class="mb-4 flex flex-wrap gap-3">
+                <div>
+                    <div class="p-checkbox p-component p-checkbox-checked mr-2">
+                        <div class="p-hidden-accessible"><input type="checkbox" name="checkbox"></div>
+                        <div class="p-checkbox-box p-highlight">
+                            <span class="p-checkbox-icon pi pi-check"></span>
+                        </div>
+                    </div>
+                    <label for="checkbox" class="text-900 font-medium mr-8"> Remember Me </label>
+                </div>
+                <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">
+                    Reset password
+                </a>
             </div>
-            
-            <div class="flex flex-column gap-4" style="width:30vw">
-                <p style="font-size:18px"> Login now </p>
-                <InputText v-model="data.email" placeholder="email" />
-                <InputText v-model="data.password" placeholder="password" />
-                <Button label="Login" severity="secondary" @click="login()" />
-            </div>
+            <button class="p-button p-component w-full" type="button" aria-label="Log In" @click="login()">
+                <span class="p-button-label">Log In</span>
+                <span class="p-ink" role="presentation" aria-hidden="true"></span>
+            </button>
         </div>
     </div>
+</div> 
 </template>

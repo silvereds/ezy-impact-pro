@@ -6,9 +6,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { doc, setDoc, getDocs, collection } from 'firebase/firestore'
 import db from '@/firebaseConfig'
 import useUiStore from '../ui'
+
 const initialState: any = {}
 
-const store = defineStore('BIOMAS_ACTIVITIES', {
+const buildingStore = defineStore('building', {
   state: () => {
     return {
       data: initialState,
@@ -26,14 +27,26 @@ const store = defineStore('BIOMAS_ACTIVITIES', {
     async getData() {
       if ((Object as any).values(this.data).length === 0) {
         this.fetching = true
-        const snap = await getDocs(collection(db, 'BIOMAS_ACTIVITIES'))
+        const snap = await getDocs(collection(db, 'BUILDING'))
         snap.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
+          console.log('building', doc.data())
           this.data[doc.id] = doc.data()
         })
 
         this.fetching = false
       }
+      // Api.get({
+      //   url: '/selectableField/all',
+      //   onSuccess: (data: any) => {
+      //     this.data = data.data
+      //     console.log(data)
+      //     this.loading = false
+      //   },
+      //   onError: (err: any) => {
+      //     console.log('error', err)
+      //     this.loading = false
+      //   }
+      // })
     },
     async addData({ data, callback }: { data: any; callback?: () => void }) {
       try {
@@ -46,12 +59,13 @@ const store = defineStore('BIOMAS_ACTIVITIES', {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         }
-        await setDoc(doc(db, 'BIOMAS_ACTIVITIES/' + id), toSave)
+        await setDoc(doc(db, 'BUILDING/' + id), toSave)
         this.data[id] = toSave
-        this.ui.notifySuccess({ message: 'Activité ajouté' })
+        this.ui.notifySuccess({ message: 'Bâtiment ajouté' })
         callback?.()
       } catch (err) {
         console.log(err)
+        this.ui.notifyError('erreur')
       } finally {
         this.loading = false
       }
@@ -69,8 +83,8 @@ const store = defineStore('BIOMAS_ACTIVITIES', {
 
           updatedAt: serverTimestamp()
         }
-
-        await updateDoc(doc(db, 'BIOMAS_ACTIVITIES/' + id), toUpdate)
+        console.log(toUpdate)
+        await updateDoc(doc(db, 'BUILDING/' + id), toUpdate)
         this.data[id] = { ...this.data[id], ...toUpdate }
         this.ui.notifySuccess({ message: 'Mise à jour éffectué' })
         callback?.()
@@ -82,4 +96,4 @@ const store = defineStore('BIOMAS_ACTIVITIES', {
     }
   }
 })
-export default store
+export default buildingStore

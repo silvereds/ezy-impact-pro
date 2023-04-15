@@ -6,8 +6,14 @@ import ValidationForm from "@/components/ValidationForm.vue";
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
-const props = defineProps<{selectedId?:string,visible:boolean,onClose:()=>void}>()
-const {visible , selectedId , onClose} = toRefs(props)
+const props = defineProps<{
+    selectedId?:string,
+    visible:boolean,
+    onClose:()=>void, 
+    category:string
+}>()
+const {visible , selectedId , onClose, category} = toRefs(props)
+
 
 
 </script>
@@ -29,14 +35,16 @@ const {visible , selectedId , onClose} = toRefs(props)
             </template>
                 <div class="card" style="width:100%;height:100%">
                     <TabView>
-                        <TabPanel header="Détail">
-                            <slot name="detail"></slot>
+                        <TabPanel header="Détail" style="background-color:red">
+                            
+                                <slot name="detail"></slot>
+                            
                         </TabPanel>
                         <TabPanel header="Modifier">
                             <slot name="update"></slot>
                         </TabPanel>
                         <TabPanel header="Validation">
-                            <ValidationForm />
+                            <ValidationForm :category="category" :itemId="selectedId" />
                         </TabPanel>
                         <TabPanel header="Déclaration">
                             <p> déclaration </p>

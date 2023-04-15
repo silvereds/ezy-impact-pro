@@ -35,7 +35,8 @@ const useUiStore = defineStore('uiStore', {
       fuelUsed: [{ frName: 'comb1' }, { frName: 'comb2' }, { frName: 'comb3' }],
       building: [{ frName: 'building1' }, { frName: 'building2' }, { frName: 'building3' }],
       owner: [{ frName: 'propriétaire' }, { frName: 'locataire' }],
-      declarer: [{ frName: 'user1' }, { frName: 'user2' }]
+      declarer: [{ frName: 'user1' }, { frName: 'user2' }],
+      buildings: []
     }
   },
   getters: {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive} from "vue";
+import {ref, toRefs, onMounted} from "vue";
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
@@ -13,8 +13,9 @@ interface Validation{
     comment?:string,
     validateData:boolean,
 }
-const props = defineProps<{itemId?:string, callback?:Function}>()
-const data =  reactive<Validation>({
+const props = defineProps<{category:string , itemId?:string}>()
+const {category , itemId } = toRefs(props)
+const data =  ref<Validation>({
     factorEmission:null,
     source:null,
     hypothesis:'',
@@ -22,9 +23,14 @@ const data =  reactive<Validation>({
     validateData:true
 })
 const save = ()=>{
-    console.log(data)
-    console.log(props)
+ 
 }
+
+onMounted(()=>{
+    console.log("on validation form", itemId?.value, category.value)
+})
+
+
 </script>
 <template>
         <div class="flex flex-column align-items-center justify-content-center">
@@ -45,11 +51,11 @@ const save = ()=>{
 <style lang="scss">
 .validation-input{
     margin-top:1rem;
-    width:70%;
+    width:50%;
     height:2.5rem;
 }
 .validation-textarea{
     margin-top:1rem;
-    width:70%;
+    width:50%;
 }
 </style>

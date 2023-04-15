@@ -4,48 +4,67 @@ import {ref} from "vue";
 import useUiStore from "@/stores/ui"
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
-import DECLARATION_STATUS from "@/utils/constant"
+import { useConfirm } from "primevue/useconfirm";
+import AddEdit from "./components/AddEdit.vue";
+import mobileStore from "@/stores/MOBILE_EQUIPMENT/store";
+import {storeToRefs} from "pinia";
+import Drawer from "@/components/Drawer.vue"
+import { SCOPE } from "@/dataType";
+import Dialog from "primevue/dialog";
 
+const store = mobileStore()
+const {data, fetching} = storeToRefs(store)
 const ui = useUiStore()
+const confirm = useConfirm();
+
 const searchText = ref(null)
+const open = ref(false)
+const showDetail = ref(false)
+const selectedId= ref<string|undefined>()
+const selectedItem = ref<any>(null)
+
 const onStatusChange = (status:string)=>{
     console.log("status here",status)
 }
+
 const onDelete = (id:string)=>{
     // show modal delete
+    confirm.require({
+        message: 'Are you sure you want to proceed?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            console.log("confirmed", id)
+        },
+        reject: () => {
+            console.log("rejected")
+        },
+    });
 }
+
 const onEdit = (id:string)=>{
-    // show modal edit
+console.log("id", id)
 }
+
 const onShow = (id:string)=>{
-    // show all detail on modal
+    selectedItem.value = (data.value as any)?.[id]
+    selectedId.value = id
+    showDetail.value = true;
 }
+
 
 const columns = [
   { title: "Référence", key: "reference", show:true },
   { title: "Type", key: "type",show:true },
   { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
-  {title:"Unité", key:"measureUnit"},
+  { title:"Unité", key:"measureUnit"},
   { title: "Site", key: "nameOfTheSite" },
   { title: "Propriétaire", key: "userId" },
   { title: "Nom d'équipement", key: "equipmentName", show:true },
   {title:"Type de propriété" , key:"ownerType"},
 ];
 
-const data = [
-    {reference:"reference1", type:"type1",equipmentName:"Nom1",status:DECLARATION_STATUS.VALIDATED },
-    {reference:"reference2", type:"type2",equipmentName:"Nom2", status:DECLARATION_STATUS.PENDING },
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-    {reference:"reference3", type:"type3",equipmentName:"Nom3" , status:DECLARATION_STATUS.DRAFT},
-]
 
 </script>
 <template>
@@ -71,14 +90,46 @@ const data = [
                 title="Équipements mobiles" 
                 subtitle="ce tableau liste tous les équipements mobiles" 
                 :columns="columns.filter((el)=>el.show)" 
-                :data="data"
-                :onNew="()=>ui.notifyError('bonjour')"
+                :data="(Object as any).values(data)"
+                :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
                 :onDelete="onDelete"
                 :onShow="onShow"
-                :onEdit="onEdit" 
+                :onEdit="onEdit"
+                :loading="fetching" 
             />
         </div>
+        <Dialog 
+            v-model:visible="open" 
+            modal 
+            :style="{ width: '50vw', height:'100vh', backgroundColor:'#fff' }" 
+            position="top"
+        >
+            <template #header>
+                <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
+                    <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
+                    <span style="font-size:18px;font-weight:600"> Nouvel Equipement Mobile  </span>
+                </div>
+            </template>
+            <AddEdit :callback="()=>open = false" />
+        </Dialog>
+        <Drawer 
+            :onClose="()=>showDetail = false" 
+            :visible="showDetail" 
+            :selectedId="selectedId"
+            :category="SCOPE.FIXE_EQUIPMENT"
+        >
+            <template v-slot:detail>
+                <div>
+                    {{ selectedItem?.type }}
+                </div>
+            </template>
+            <template v-slot:update>
+                <div>
+                    <AddEdit :itemId="selectedId" />
+                </div>
+            </template>
+        </Drawer>
     </div>
     
 </template>

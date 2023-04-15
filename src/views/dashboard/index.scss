@@ -1,0 +1,38 @@
+.title {
+  font-size: 16px;
+  color: #515c66;
+  font-weight: 400;
+  font-family: 'Open Sans';
+}
+.value-building {
+  font-size: 12px;
+  color: #657380;
+  font-weight: 300;
+  font-family: 'Open Sans';
+}
+.stat-card {
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  padding: 12px 16px;
+  background: #fff;
+  .card-header {
+    .header-buttons a {
+      height: 20px;
+      width: 20px;
+      background-color: rgba(148, 154, 166, 0.1);
+    }
+    i {
+      color: #949aa6;
+      font-size: 12px;
+      height: 12px;
+      transform: rotate(45deg);
+    }
+  }
+}
+.stat-graph span {
+  width: 8px;
+  display: block;
+  background-color: #2f8ee5;
+  margin-left: 4px;
+  border-radius: 1px;
+  opacity: 0.4;
+}
