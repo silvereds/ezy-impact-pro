@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
 import useUiStore from "@/stores/ui"
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
@@ -9,7 +9,7 @@ import AddEdit from "./components/AddEdit.vue";
 import mobileStore from "@/stores/MOBILE_EQUIPMENT/store";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
-import { SCOPE } from "@/dataType";
+import { SCOPE, type Select } from "@/dataType";
 import Dialog from "primevue/dialog";
 
 const store = mobileStore()
@@ -55,16 +55,16 @@ const onShow = (id:string)=>{
 
 const columns = [
   { title: "Référence", key: "reference", show:true },
-  { title: "Type", key: "type",show:true },
+  { title: "Type", key: "type",show:true, formatter:(data:Select)=>data?.name || "" },
   { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
   { title:"Unité", key:"measureUnit"},
   { title: "Site", key: "nameOfTheSite" },
   { title: "Propriétaire", key: "userId" },
-  { title: "Nom d'équipement", key: "equipmentName", show:true },
+  { title: "Nom d'équipement", key: "name", show:true },
   {title:"Type de propriété" , key:"ownerType"},
 ];
-
+onMounted(async ()=> await store.getData())
 
 </script>
 <template>
@@ -102,8 +102,8 @@ const columns = [
         <Dialog 
             v-model:visible="open" 
             modal 
-            :style="{ width: '50vw', height:'100vh', backgroundColor:'#fff' }" 
-            position="top"
+            :style="{backgroundColor:'#fff' }" 
+            position="center"
         >
             <template #header>
                 <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
@@ -117,7 +117,7 @@ const columns = [
             :onClose="()=>showDetail = false" 
             :visible="showDetail" 
             :selectedId="selectedId"
-            :category="SCOPE.FIXE_EQUIPMENT"
+            :category="SCOPE.MOBILE_EQUIPMENT"
         >
             <template v-slot:detail>
                 <div>

@@ -3,7 +3,7 @@ import Api from '../api/fetchWrapper'
 import { useToast } from 'vue-toastification'
 
 const innerOption = {
-  position: 'bottom-right',
+  position: 'top-center',
   timeout: 2000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
@@ -60,11 +60,11 @@ const useUiStore = defineStore('uiStore', {
         }
       })
     },
-    notifySuccess({ message = '' }: { message: string }) {
-      toast.success(message, innerOption as any)
+    notifySuccess({ message = '',position='top-center' }: { message: string,position?:string }) {
+      toast.success(message, { ...innerOption, position } as any)
     },
-    notifyError(message: string | '') {
-      toast.error(message, innerOption as any)
+    notifyError(message: string | '',position="top-center") {
+      toast.error(message, {...innerOption , position} as any)
     }
   }
 })

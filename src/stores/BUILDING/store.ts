@@ -29,24 +29,11 @@ const buildingStore = defineStore('building', {
         this.fetching = true
         const snap = await getDocs(collection(db, 'BUILDING'))
         snap.forEach((doc) => {
-          console.log('building', doc.data())
           this.data[doc.id] = doc.data()
         })
 
         this.fetching = false
       }
-      // Api.get({
-      //   url: '/selectableField/all',
-      //   onSuccess: (data: any) => {
-      //     this.data = data.data
-      //     console.log(data)
-      //     this.loading = false
-      //   },
-      //   onError: (err: any) => {
-      //     console.log('error', err)
-      //     this.loading = false
-      //   }
-      // })
     },
     async addData({ data, callback }: { data: any; callback?: () => void }) {
       try {

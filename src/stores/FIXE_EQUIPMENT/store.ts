@@ -3,7 +3,7 @@ import { serverTimestamp, updateDoc } from 'firebase/firestore'
 // import Api from '@/api/fetchWrapper'
 import STATUS from '@/dataType'
 import { v4 as uuidv4 } from 'uuid'
-import { doc, setDoc, getDocs, collection } from 'firebase/firestore'
+import { doc, getDocs, collection, writeBatch, increment, query, where } from 'firebase/firestore'
 import db from '@/firebaseConfig'
 import useUiStore from '../ui'
 
@@ -51,6 +51,7 @@ const fixeEqStore = defineStore('fixeEq', {
     async addData({ data, callback }: { data: any; callback?: () => void }) {
       try {
         this.loading = true
+        const batch = writeBatch(db)
         const id = uuidv4()
         const toSave = {
           ...data,
@@ -59,12 +60,38 @@ const fixeEqStore = defineStore('fixeEq', {
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         }
-        await setDoc(doc(db, 'FIXE_EQUIPMENT/' + id), toSave)
-        this.data[id] = toSave
-        this.ui.notifySuccess({ message: 'Équipement ajouté' })
-        callback?.()
+        const q = query(collection(db, 'FIXE_EQUIPMENT'), where('reference', '==', data?.reference))
+        const querySnapshot = await getDocs(q)
+        let count = 0
+        querySnapshot.forEach((doc) => {
+          count++
+        })
+
+        if (count === 0) {
+          const docRef = doc(db, 'FIXE_EQUIPMENT/' + id)
+          const statRef = doc(db, 'STATISTICS/STAT')
+          batch.set(docRef, toSave, { merge: true })
+          batch.set(
+            statRef,
+            {
+              FIXE_EQUIPMENT: {
+                [STATUS.PENDING]: increment(1),
+                total: increment(1)
+              }
+            },
+            { merge: true }
+          )
+
+          await batch.commit()
+          this.data[id] = toSave
+          this.ui.notifySuccess({ message: 'Équipement fixe ajouté', position: 'bottom-center' })
+          callback?.()
+        } else {
+          this.ui.notifyError("veuillez changer la référence de l' équipement", 'bottom-center')
+        }
       } catch (err) {
         console.log(err)
+        this.ui.notifyError('erreur' + err)
       } finally {
         this.loading = false
       }

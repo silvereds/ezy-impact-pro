@@ -1,3 +1,5 @@
+<script setup lang="ts">
+</script>
 <template>
     <div class="flex-center scale-100">
           <div class="col-lg-7 mx-auto text-white">

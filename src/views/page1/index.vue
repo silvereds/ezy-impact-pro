@@ -104,12 +104,11 @@ onMounted(async ()=> await store.getData())
                 :loading="fetching" 
             />
         </div>
-        
         <Dialog 
             v-model:visible="open" 
             modal 
-            :style="{ width: '50vw', height:'100vh', backgroundColor:'#fff' }" 
-            position="top"
+            :style="{ backgroundColor:'#fff' }" 
+            position="center"
         >
             <template #header>
                 <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">

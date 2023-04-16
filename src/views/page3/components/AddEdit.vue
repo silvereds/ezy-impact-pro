@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import {onMounted , computed} from "vue"
+import {onMounted } from "vue"
 import InputText from "primevue/inputtext";
 import Dropdown from 'primevue/dropdown';
 import {ref} from "vue";
 import Button from "primevue/button"
 import {storeToRefs} from "pinia";
-import fixeEqStore from "@/stores/MOBILE_EQUIPMENT/store";
+import electStore from "@/stores/ELECTRICAL_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
-import type { MOBILES } from "@/dataType";
+import type { EQUIPMENT } from "@/dataType";
 import InputNumber from 'primevue/inputnumber';
 
-const store = fixeEqStore()
+const store = electStore()
 const ui = useUiStore()
 const props = defineProps<{itemId?:string, callback?:()=>void}>()
 const {owner , declarer } = storeToRefs(ui)
@@ -20,11 +20,6 @@ const brandList:any = {
     1:{id:1,name:"marque1",model:[{id:1,name:"modele11"},{id:1,name:"modele12"}]},
     2:{id:2,name:"marque2",model:[{id:1,name:"modele21"},{id:1,name:"modele22"}]}
 }
-const fuelList:any = {
-    1:{id:1, name:"combustible1"},
-    2:{id:2, name:"combustible2"},
-    3:{id:3, name:"combustible3"},
-}
 
 const unitList:any ={
     1:{id:1 , name:"km"},
@@ -32,13 +27,11 @@ const unitList:any ={
     3:{id:3 , name:"kg"},
 } 
 
-let data = ref<MOBILES>({
+let data = ref<EQUIPMENT>({
   reference:null,
   type: null,
   brand: null,
   model: null,
-  yearProduction: null,
-  fuelUsed: null,
   performanceValue: null,
   performanceUnit: null,
   name: null,
@@ -88,18 +81,8 @@ onMounted(()=>{
                     <Dropdown  v-model="data.model" :options="brandList?.[data.brand?.id as string]?.model" optionLabel="name" class="input-ezy" optionValue="name" />
                 </div>
             </div>
-            <div class="flex flex-row align-items-center justify-content-between mt-3">
-                <div class="flex flex-column gap-2">
-                    <label> Année de Production </label>
-                    <InputNumber v-model="data.yearProduction" class="input-ezy" inputId="integeronly" style="height:2.6rem" />
-                </div>
-                <div class="flex flex-column ml-2 gap-2">
-                    <label> Combustible utilisé </label>
-                    <Dropdown  v-model="data.fuelUsed" :options="(Object as any).values(fuelList)" optionLabel="name" class="input-ezy" />
-                </div>
-            </div>
+            
             <div class="flex flex-row align-items-center justify-content-between mt-5">
-                
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Performance d'équipement </label>
                     <div class="flex">

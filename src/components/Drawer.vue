@@ -18,7 +18,7 @@ const {visible , selectedId , onClose, category} = toRefs(props)
 
 </script>
 <template>
-    <Sidebar :visible="visible" style="width:50vw" :showCloseIcon="false">
+    <Sidebar :visible="visible" style="width:50vw" :showCloseIcon="false" position="right">
             <template #header>
                 <div class="flex-row-between" style="width:100%">
                     <div class="flex align-items-center flex-row-start">

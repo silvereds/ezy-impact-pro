@@ -77,6 +77,11 @@
                 </template>
             </Column>
             <Column v-for="column in columns" :field="column.key" :header="column.title" :key="column.key">
+                <template #body="slotProps">
+                    <span>
+                        {{ column?.formatter ? column.formatter(slotProps.data[column.key]): slotProps.data[column.key]}}
+                    </span>
+                </template>
             </Column>
             <Column header="Action">
                 <template #body="slotProps">
