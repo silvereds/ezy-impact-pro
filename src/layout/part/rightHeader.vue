@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
     import { ref } from "vue";
     import Avatar from "primevue/avatar";
     import Menu from 'primevue/menu';
@@ -26,7 +26,7 @@
         },
     ]);
 
-const toggle = (event) => {
+const toggle = (event:any) => {
     menu.value.toggle(event);
 };
 

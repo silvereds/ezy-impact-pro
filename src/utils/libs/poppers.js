@@ -1,37 +1,36 @@
-import Popper from './popper';
+import Popper from './popper'
 
 class Poppers {
-  subMenuPoppers = [];
+  subMenuPoppers = []
 
   constructor() {
-    this.init();
+    this.init()
   }
 
   init() {
     document.querySelectorAll('.menu > ul > .menu-item.sub-menu').forEach((element) => {
-      this.subMenuPoppers.push(new Popper(element, element.lastElementChild));
-      this.closePoppers();
-    });
+      this.subMenuPoppers.push(new Popper(element, element.lastElementChild))
+      this.closePoppers()
+    })
   }
 
   togglePopper(target) {
-    if (window.getComputedStyle(target).visibility === 'hidden')
-      target.style.visibility = 'visible';
-    else target.style.visibility = 'hidden';
+    if (window.getComputedStyle(target).visibility === 'hidden') target.style.visibility = 'visible'
+    else target.style.visibility = 'hidden'
   }
 
   updatePoppers() {
     this.subMenuPoppers.forEach((element) => {
-      element.instance.state.elements.popper.style.display = 'none';
-      element.instance.update();
-    });
+      element.instance.state.elements.popper.style.display = 'none'
+      element.instance.update()
+    })
   }
 
   closePoppers() {
     this.subMenuPoppers.forEach((element) => {
-      element.hide();
-    });
+      element.hide()
+    })
   }
 }
 
-export default Poppers;
+export default Poppers
