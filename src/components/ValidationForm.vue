@@ -31,19 +31,22 @@ onMounted(()=>{
 })
 
 
+
 </script>
 <template>
         <div class="flex flex-column align-items-center justify-content-center">
-            <InputNumber v-model="data.factorEmission" placeholder="Facteur d'emission" size="small" class="validation-input" />
-            <InputText v-model="data.source" placeholder="Source de données" class="validation-input"/>
-            <Textarea v-model="data.hypothesis" placeholder="Hypothèse" class="validation-textarea"/>
-            <Textarea v-model="data.comment" placeholder="Commentaire" class="validation-textarea"/>
-            <div class="flex align-items-center validation-textarea">
-                <Checkbox :binary="true" v-model="data.validateData" inputId="valid" name="pizza" value="Cheese" />
-                <label for="valid" class="ml-2"> valider les informations </label>
-            </div>
-            <div class="mt-3 flex align-items-center justify-content-center" >
-                <Button label="Enregister" @click="save()" />
+            <div class="surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
+                <InputNumber class="p-inputtext p-component w-full md:w-25rem" v-model="data.factorEmission" placeholder="Facteur d'emission" size="small" />
+                <InputText v-model="data.source" placeholder="Source de données" class="p-inputtext p-component w-full md:w-25rem mt-2"/>
+                <Textarea v-model="data.hypothesis" placeholder="Hypothèse" class="p-inputtext p-component w-full md:w-25rem mt-2"/>
+                <Textarea v-model="data.comment" placeholder="Commentaire" class="p-inputtext p-component w-full md:w-25rem"/>
+                <div class="flex align-items-center validation-textarea">
+                    <Checkbox :binary="true" v-model="data.validateData" inputId="valid" name="pizza" value="Cheese" />
+                    <label for="valid" class="ml-2"> valider les informations </label>
+                </div>
+                <div class="mt-3 flex align-items-center justify-content-center" >
+                    <Button label="Enregister" @click="save()" />
+                </div>
             </div>
         </div>
 </template>

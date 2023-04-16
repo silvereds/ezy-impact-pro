@@ -1,6 +1,6 @@
 $sidebar-width: 270px;
 $sidebar-collapsed-width: 80px;
-$bg-silver: #e8eff9;
+$bg-silver: #f1f6fd;
 @import 'css-pro-layout/dist/scss/css-pro-layout.scss';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import './remixicon/remixicon.css';
@@ -254,6 +254,7 @@ a {
 }
 .p-sidebar .p-sidebar-header {
   padding-bottom: 0;
+  background-color: $bg-silver;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -267,4 +268,14 @@ a {
   align-items: center;
   justify-content: center;
   padding: 0px;
+}
+.p-tabview .p-tabview-nav {
+  background-color: $bg-silver;
+  li .p-tabview-nav-link {
+    background-color: $bg-silver;
+  }
+}
+label {
+  font-weight: 550;
+  font-size: 16px;
 }
