@@ -10,11 +10,12 @@ import Page7 from '../views/page7/index.vue'
 import Validation from '../views/Validation/index.vue'
 import Declaration from '../views/Declaration/index.vue'
 import Results from '../views/Results/index.vue'
+import Analysis from '../views/Results/Analysis.vue'
 import Dashboard from '../views/dashboard/index.vue'
 import NotFound from '../views/notFound/NotFound.vue'
 import useUiStore from '@/stores/ui'
 import useAuthStore from '@/stores/authStore'
-import buildingStore from "@/stores/BUILDING/store";
+import buildingStore from '@/stores/BUILDING/store'
 import Login from '../views/auth/Login.vue'
 
 function requireAuth(to: any) {
@@ -27,8 +28,7 @@ function requireAuth(to: any) {
     console.log('not authenticated redirection to login page')
     return { name: 'Login' }
   }
-    buildStore.getData()
-  
+  buildStore.getData()
 }
 
 const authRoute = [
@@ -51,29 +51,37 @@ export const dashboardRoute = [
 ]
 
 export const otherRoute = [
-  {
-    path: '/validation',
-    title: 'Validation',
-    name: 'validation',
-    icon: 'ri-list-check-2',
-    component: Layout,
-    children: [{ path: '', component: Validation }]
-  },
-  {
-    path: '/declaration',
-    name: 'declaration',
-    title: 'Déclaration',
-    icon: 'ri-list-check',
-    component: Layout,
-    children: [{ path: '', component: Declaration }]
-  },
+  // {
+  //   path: '/validation',
+  //   title: 'Validation',
+  //   name: 'validation',
+  //   icon: 'ri-list-check-2',
+  //   component: Layout,
+  //   children: [{ path: '', component: Validation }]
+  // },
+  // {
+  //   path: '/declaration',
+  //   name: 'declaration',
+  //   title: 'Déclaration',
+  //   icon: 'ri-list-check',
+  //   component: Layout,
+  //   children: [{ path: '', component: Declaration }]
+  // },
   {
     path: '/resultat',
     name: 'result',
-    title: 'Résultat',
+    title: 'Résultat Global',
     icon: 'ri-bar-chart-2-fill',
     component: Layout,
     children: [{ path: '', component: Results }]
+  },
+  {
+    path: '/resultat-analyse',
+    name: 'result-analysis',
+    title: 'Résultat et  Analyse',
+    icon: 'ri-list-check-2',
+    component: Layout,
+    children: [{ path: '', component: Analysis }]
   }
 ]
 

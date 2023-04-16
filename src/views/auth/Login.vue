@@ -15,8 +15,8 @@ const login = ()=>{
 <div class="px-5 min-h-screen flex justify-content-center align-items-center bg-primary">
     <div class="border-1 surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
         <div class="mb-4">
-            <div class="text-900 text-xl font-bold mb-2">Log in</div>
-            <span class="text-600 font-medium">Please enter your details</span>
+            <div class="text-900 text-xl font-bold mb-2">Connexion</div>
+            <span class="text-600 font-medium">Veuillez saisir vos données</span>
         </div>
         <div class="flex flex-column">
             <span class="p-input-icon-left w-full mb-4">
@@ -35,14 +35,12 @@ const login = ()=>{
                             <span class="p-checkbox-icon pi pi-check"></span>
                         </div>
                     </div>
-                    <label for="checkbox" class="text-900 font-medium mr-8"> Remember Me </label>
+                    <label for="checkbox" class="text-900 font-medium mr-8"> Se Souvenir de moi </label>
                 </div>
-                <a class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">
-                    Reset password
-                </a>
+                
             </div>
             <button class="p-button p-component w-full" type="button" aria-label="Log In" @click="login()">
-                <span class="p-button-label">Log In</span>
+                <span class="p-button-label"> Se Connecter</span>
                 <span class="p-ink" role="presentation" aria-hidden="true"></span>
             </button>
         </div>

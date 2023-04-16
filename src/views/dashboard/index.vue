@@ -30,10 +30,10 @@ const selectedId = ref()
             <h4> Tableau de bord </h4>
         </div>
         <div class="grid w-100 mt-3 pa-2" >
-            <StatCard title="bâtiment" :value="6004" barColor="#2f8ee5" />
+            <StatCard title="bâtiment" :value="4" barColor="#2f8ee5" />
             <StatCard title="Équipements" :value="2" barColor="#00acac" />
             <StatCard title="Activités" :value="4" barColor="#f1b263" />
-            <StatCard title="bâtiment" :value="6004" barColor="#2f8ee5" />
+            <StatCard title="Total" :value="10" barColor="#2f8ee5" />
         </div>
         <div class="card px-2 pt-2">
             <div class="grid m-2">
