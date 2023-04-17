@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import Api from '../api/fetchWrapper'
 import { useToast } from 'vue-toastification'
+import { doc, getDoc } from 'firebase/firestore'
+import db from '@/firebaseConfig'
 
 const innerOption = {
   position: 'top-center',
@@ -36,7 +38,10 @@ const useUiStore = defineStore('uiStore', {
       building: [{ frName: 'building1' }, { frName: 'building2' }, { frName: 'building3' }],
       owner: [{ frName: 'propriétaire' }, { frName: 'locataire' }],
       declarer: [{ frName: 'user1' }, { frName: 'user2' }],
-      buildings: []
+      buildings: [],
+      stat: {},
+      fetching: false,
+      onlyFetch: false
     }
   },
   getters: {
@@ -60,11 +65,30 @@ const useUiStore = defineStore('uiStore', {
         }
       })
     },
-    notifySuccess({ message = '',position='top-center' }: { message: string,position?:string }) {
+    async getUiData() {
+      try{
+        if (!this.onlyFetch) {
+          this.fetching = true
+          const docRes = await getDoc(doc(db, 'STATISTICS/STAT'))
+          this.stat = docRes.data() || {}
+          console.log("docRes", docRes.data())
+          this.onlyFetch = true
+        }
+      }catch(err){
+        console.log("error when fetch initial data")
+      }
+    },
+    notifySuccess({
+      message = '',
+      position = 'top-center'
+    }: {
+      message: string
+      position?: string
+    }) {
       toast.success(message, { ...innerOption, position } as any)
     },
-    notifyError(message: string | '',position="top-center") {
-      toast.error(message, {...innerOption , position} as any)
+    notifyError(message: string | '', position = 'top-center') {
+      toast.error(message, { ...innerOption, position } as any)
     }
   }
 })

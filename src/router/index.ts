@@ -18,6 +18,7 @@ import useAuthStore from '@/stores/authStore'
 import buildingStore from '@/stores/BUILDING/store'
 import Login from '../views/auth/Login.vue'
 
+
 function requireAuth(to: any) {
   // const accessToken = import.meta.env.VITE_ACCESS_TOKEN
   const auth = useAuthStore()
@@ -29,6 +30,7 @@ function requireAuth(to: any) {
     return { name: 'Login' }
   }
   buildStore.getData()
+  ui.getUiData()
 }
 
 const authRoute = [

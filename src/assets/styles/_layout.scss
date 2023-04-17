@@ -4,11 +4,20 @@
     display: flex;
     height: 100vh;
     flex-direction: column;
-
+    overflow: hidden;
     .main-content {
-      height: 100vh;
-      padding: 60px 0rem 1rem 0rem;
+      height: calc(100vh - 60px);
+      margin-top: 55px;
       background-color: #e8eff9;
+      overflow-y: auto;
+    }
+    .header-content {
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+    }
+    .content-main {
+      padding-bottom: 1rem;
     }
   }
 
