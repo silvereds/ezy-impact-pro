@@ -1,8 +1,5 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-//  swiper for animation here
-
-
 import {ref, onMounted} from "vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
@@ -13,6 +10,7 @@ import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
 import { SCOPE } from "@/dataType";
+import ConfirmDialog from 'primevue/confirmdialog';
 
 const store = fixeEqStore()
 const {data, fetching} = storeToRefs(store)
@@ -31,11 +29,12 @@ const onStatusChange = (status:string)=>{
 }
 
 const onDelete = (id:string)=>{
-    // show modal delete
+   
     confirm.require({
         message: 'Are you sure you want to proceed?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
+        acceptClass: 'p-button-danger',
         accept: () => {
             console.log("confirmed", id)
         },
@@ -104,6 +103,7 @@ onMounted(async ()=> await store.getData())
                 :loading="fetching" 
             />
         </div>
+        <ConfirmDialog></ConfirmDialog>
         <Dialog 
             v-model:visible="open" 
             modal 

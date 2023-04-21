@@ -89,6 +89,7 @@
                         <Button size="small" style="background-color:#E5E3F1" icon="pi pi-eye" label="Voir" @click="props?.onShow?.(slotProps.data.id)" text />
                         <!-- <Button severity="secondary" size="small" class="ml-2" icon="pi pi-pencil" rounded @click="props?.onEdit?.(slotProps.data.id)"  />
                         <Button severity="danger"  size="small" class="ml-2" icon="pi pi-trash" rounded @click="props?.onDelete?.(slotProps.data.id)"  /> -->
+                        <Button severity="danger"  size="small" class="ml-2" icon="pi pi-trash" rounded @click="props?.onDelete?.(slotProps.data.id)"  />
                     </div>
                 </template>
             </Column>
