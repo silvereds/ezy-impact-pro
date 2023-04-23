@@ -152,8 +152,9 @@ const props = defineProps<{
 }>()
 
 watch(selectedStatus , (newSelected,prevSelected)=>{
-    props?.onStatusChange?.(newSelected.value?.name)
-    console.log(prevSelected)
+    props?.onStatusChange?.(newSelected?.name)
+    // console.log("previous selected Status ",prevSelected)
+    // console.log("new  selected Status ",newSelected)
 })
 
 </script>

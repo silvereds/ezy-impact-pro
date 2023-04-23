@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import {ref, onMounted} from "vue";
+import {ref, onMounted, computed} from "vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
 import Dialog from "primevue/dialog";
@@ -20,7 +20,8 @@ const {data, loadingData,loading} = storeToRefs(store)
 
 const confirm = useConfirm();
 
-const searchText = ref(null)
+const searchText = ref('')
+const declarationStatus = ref('ALL')
 const open = ref(false)
 const showDetail = ref(false)
 const selectedId= ref<string|undefined>()
@@ -29,6 +30,7 @@ const selectedItem = ref<any>(null)
 
 const onStatusChange = (status:string)=>{
     console.log("status here",status)
+    declarationStatus.value = status
 }
 
 const onDelete = (id:string)=>{
@@ -60,7 +62,7 @@ const onShow = (id:string)=>{
 
 const columns = [
   { title: "Référence", key: "reference", },
-  { title: "Type", key: "type",show:true, formatter:(data:any)=>data.frName },
+  { title: "Type", key: "type",show:true, formatter:(data:any)=>data?.frName },
   { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
   {title:"Unité", key:"measureUnit"},
@@ -71,6 +73,23 @@ const columns = [
 ];
 
 onMounted(async ()=> await store.getData())
+
+const filterData = computed(()=>{
+    const d = (Object as any).values(data.value || {})
+    const filter = (el:any)=>{
+        return (
+            el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
+            el?.type?.frName?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
+            el?.equipmentName?.toLowerCase()?.includes(searchText.value?.toLowerCase())
+        )
+    }
+    if(declarationStatus.value === "ALL"){
+        return d.filter(filter)
+    }
+    let statusData:any = d.filter((el:any)=>el.declarationStatus === declarationStatus.value)
+
+    return statusData.filter(filter)
+})
 
 
 </script>
@@ -98,7 +117,7 @@ onMounted(async ()=> await store.getData())
                 title="Équipements fixes" 
                 subtitle="ce tableau liste tous les équipements fixes" 
                 :columns="columns.filter((el)=>el.show)" 
-                :data="(Object as any).values(data || {})"
+                :data="filterData"
                 :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
                 :onShow="onShow"
