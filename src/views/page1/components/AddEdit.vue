@@ -7,12 +7,15 @@ import Button from "primevue/button"
 import {storeToRefs} from "pinia";
 import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
+import { SCOPE } from "@/dataType";
 
 
 const store = fixeEqStore()
 const ui = useUiStore()
 const props = defineProps<{itemId?:string, callback?:()=>void}>()
-const {building, units , fuelUsed, type, owner , declarer } = storeToRefs(ui)
+const {building, units , fuelUsed , owner , declarer, getSelectable } = storeToRefs(ui)
+const {fuel_used,type,equipment_performance} = getSelectable.value(SCOPE.FIXE_EQUIPMENT,['type','fuel_used','equipment_performance'])
+console.log("selectable field", {fuel_used,type,equipment_performance})
 
 let data = ref<any>({
     reference:null,
@@ -78,8 +81,8 @@ onMounted(()=>{
             <!-- équipment name  ,    -->
             <div class="flex flex-row align-items-center justify-content-between mt-5">
                 <div class="flex flex-column gap-2">
-                    <label> Emplacement (sur quel bâtiment) </label>
-                    <Dropdown  v-model="data.location" :options="building" optionLabel="frName" class="input-ezy" optionValue="frName" />
+                    <label> Emplacement </label>
+                    <Dropdown placeholder="sur quel bâtiment"  v-model="data.location" :options="building" optionLabel="frName" class="input-ezy" optionValue="frName" />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Déclarant </label>

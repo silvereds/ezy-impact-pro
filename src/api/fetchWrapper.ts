@@ -1,4 +1,4 @@
-const base_url = "http://www.impact-server.cogitbusinessfactory.com/api/v1";
+const base_url = import.meta.env.VITE_API_URL
 interface ApiProps{
     url:string,
     onSuccess?:Function,
@@ -9,7 +9,7 @@ const get = async({url,onSuccess,onError}:ApiProps)=>{
     const requestOptions = {
         method: 'GET'
     };
-    return await fetch(base_url+url, requestOptions).then(res => res.json()).then((res)=>onSuccess?.(res)).catch((err)=>onError?.(err));
+    return await fetch(base_url+url, requestOptions).then(res => res.json()).then((res)=>onSuccess?.(res?.data)).catch((err)=>onError?.(err));
 }
 
 const del = async ({ url = '', onSuccess, onError }: ApiProps) => {
@@ -18,7 +18,7 @@ const del = async ({ url = '', onSuccess, onError }: ApiProps) => {
   }
   return await fetch(base_url + url, requestOptions)
     .then((res) => res.json())
-    .then((res) => onSuccess?.(res))
+    .then((res) => onSuccess?.(res?.data))
     .catch((err) => onError?.(err))
 }
 
@@ -28,7 +28,10 @@ const put = async({url, body,onSuccess,onError}:ApiProps)=>{
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     };
-    return await fetch(base_url+url, requestOptions).then(res => res.json()).then((res)=>onSuccess?.(res)).catch((err)=>onError?.(err));;    
+    return await fetch(base_url+url, requestOptions)
+                .then(res => res.json())
+                .then((res)=>res?.data ? onSuccess?.(res?.data) : onError?.(res))
+                .catch((err)=>onError?.(err));    
 }
 const post = async ({ url, body, onSuccess, onError }: ApiProps) => {
   const requestOptions = {
@@ -38,7 +41,7 @@ const post = async ({ url, body, onSuccess, onError }: ApiProps) => {
   }
   return await fetch(base_url + url, requestOptions)
     .then((res) => res.json())
-    .then((res) => onSuccess?.(res))
+    .then((res) => onSuccess?.(res?.data))
     .catch((err) => onError?.(err))
 }
 

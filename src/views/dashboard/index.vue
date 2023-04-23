@@ -17,15 +17,15 @@ const ui = useUiStore()
 const {data} = storeToRefs(store)
 const rowPerPage = ref(10)
 const page = ref(0)
-
 const showEdit = ref(false)
 const showAdd = ref(false)
 const searchText = ref<string>('')
 const selectedId = ref()
 const filterData = computed(()=>{
     const storeData = data.value
+    // console.log("building list", data.value)
     const d = (Object as any).values(storeData)
-    return d.filter((el:any)=>el?.name?.toLowerCase()?.includes(searchText.value?.toLowerCase()))
+    return d.filter((el:any)=>el?.nameOfTheSite?.toLowerCase()?.includes(searchText.value?.toLowerCase()))
 })
 const statData = computed(()=>{
     let nbEquip:number = 0;
@@ -71,12 +71,10 @@ const statData = computed(()=>{
                             </div>
                            
                             <div style="padding:1rem 1rem 3rem 1rem;">
-                                <div v-if="store.fetching" class="flex align-items-center justify-content-center">
-                                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-                                </div>
-                                <div v-else>
+                                
+                                <div>
                                     <div v-if="filterData.length === 0" class="flex align-items-center justify-content-center">
-                                        Aucunes données
+                                        Aucunes données 
                                     </div>
                                     <div v-else>
                                         <div
@@ -95,7 +93,7 @@ const statData = computed(()=>{
                                             </div>
                                             <div class="mx-2">
                                                 <span class="title">Nom du site</span><br/>
-                                                <span class="value-building"> {{ building?.name }} </span>
+                                                <span class="value-building"> {{ building?.nameOfTheSite }} </span>
                                             </div>
                                             <div class="mx-2">
                                                 <span class="title">Superficie</span><br/>

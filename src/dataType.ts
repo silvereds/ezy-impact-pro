@@ -5,7 +5,7 @@ enum STATUS {
   VALIDATED = 'VALIDATED'
 }
 export enum SCOPE {
-  FIXE_EQUIPMENT = 'FIXE_EQUIPMENT',
+  FIXE_EQUIPMENT = 'FIXED_EQUIPMENT',
   ELECTRICAL_EQUIPMENT = 'ELECTRICAL_EQUIPMENT',
   MOBILE_EQUIPMENT = 'MOBILE_EQUIPMENT',
   COLD_HEAT_EQUIPMENT = 'COLD_HEAT_EQUIPMENT',
@@ -17,7 +17,7 @@ export enum SCOPE {
 export interface BUILDING {
   id?: string
   reference: string
-  name: string
+  nameOfTheSite: string
   area: number
 }
 export type Select = {

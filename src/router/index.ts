@@ -30,7 +30,7 @@ function requireAuth(to: any) {
     return { name: 'Login' }
   }
   buildStore.getData()
-  ui.getUiData()
+  ui.getSelectableFields()
 }
 
 const authRoute = [
