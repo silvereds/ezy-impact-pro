@@ -33,6 +33,7 @@ const buildingStore = defineStore('building', {
           Api.get({
             url: '/building/all',
             onSuccess: (data: any) => {
+              // console.log("data",data)
               data.forEach((building:any)=>{
                 this.data[building?.id] = building
               })

@@ -1,17 +1,16 @@
 import { defineStore } from 'pinia'
-import { serverTimestamp, updateDoc } from 'firebase/firestore'
-// import Api from '@/api/fetchWrapper'
+import Api from '@/api/fetchWrapper'
 import STATUS from '@/dataType'
-import { v4 as uuidv4 } from 'uuid'
-import { doc, getDocs, collection, writeBatch, increment, query, where } from 'firebase/firestore'
-import db from '@/firebaseConfig'
 import useUiStore from '../ui'
+
 const initialState: any = {}
 const mobileEqStore = defineStore('mobileEq', {
   state: () => {
     return {
       data: initialState,
       loading: false,
+      onlyFetch:false,
+      loadingData:false,
       fetching: false,
       ui: useUiStore()
     }
@@ -23,92 +22,70 @@ const mobileEqStore = defineStore('mobileEq', {
   },
   actions: {
     async getData() {
-      if ((Object as any).values(this.data).length === 0) {
-        this.fetching = true
-        const snap = await getDocs(collection(db, 'MOBILE_EQUIPMENT'))
-        snap.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          this.data[doc.id] = doc.data()
+      if (!this.onlyFetch) {
+        this.loadingData = true
+        Api.get({
+          url: '/mobileEquipment/enterprise/1',
+          onSuccess: (data: any) => {
+            this.data = data || {}
+            console.log("mobile equipement list",data)
+            this.onlyFetch = true
+            this.loadingData = false
+          },
+          onError: (err: any) => {
+            console.log('error', err)
+            this.onlyFetch = true
+            this.loadingData = false
+          }
         })
-
-        this.fetching = false
       }
     },
     async addData({ data, callback }: { data: any; callback?: () => void }) {
-      try {
+      try{
         this.loading = true
-        const batch = writeBatch(db)
-
-        const id = uuidv4()
-        const toSave = {
-          ...data,
-          id,
-          status: STATUS.PENDING,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        }
-        const q = query(
-          collection(db, 'MOBILE_EQUIPMENT'),
-          where('reference', '==', data?.reference)
-        )
-        const querySnapshot = await getDocs(q)
-        let count = 0
-        querySnapshot.forEach((doc) => {
-          count++
+        
+        Api.post({
+          url:'/fixedEquipment',
+          body:{...data,declarationStatus:STATUS.PENDING},
+          onSuccess:(data:any)=>{
+            this.data[`${data.id}`] = {...(data|| {})}
+            this.ui.notifySuccess({ message: 'Équipement fixe ajouté', position: 'bottom-center' })
+            this.loading = false
+            callback?.()
+          },
+          onError:(err:any)=>{
+            this.ui.notifyError("veuillez changer la référence de l' équipement", 'bottom-center')
+            console.log("error whwn add fixed Equipement",err)
+            this.loading = false
+          }
         })
-
-        if (count === 0) {
-          const docRef = doc(db, 'MOBILE_EQUIPMENT/' + id)
-          const statRef = doc(db, 'STATISTICS/STAT')
-          batch.set(docRef, toSave, { merge: true })
-          batch.set(
-            statRef,
-            {
-              MOBILE_EQUIPMENT: {
-                [STATUS.PENDING]: increment(1),
-                total: increment(1)
-              }
-            },
-            { merge: true }
-          )
-
-          await batch.commit()
-          this.data[id] = toSave
-          this.ui.notifySuccess({ message: 'Équipement ajouté' })
-          callback?.()
-        } else {
-          this.ui.notifyError("veuillez changer la référence de l' équipement")
-        }
-      } catch (err) {
-        this.ui.notifyError('error' + err)
-        console.log(err)
-      } finally {
-        this.loading = false
+      }catch(err){
+        this.ui.notifyError('erreur' + err)
       }
-
-      //this.data.push({ ...data, type: data?.type?.frName, status: STATUS.PENDING })
     },
     async updateData({ data, callback, id }: { data: any; callback?: () => void; id: string }) {
-      try {
+      try{
         this.loading = true
-        delete data.createdAt
-
-        const toUpdate = {
-          ...data,
-          status: STATUS.PENDING,
-
-          updatedAt: serverTimestamp()
-        }
-
-        await updateDoc(doc(db, 'MOBILE_EQUIPMENT/' + id), toUpdate)
-        this.data[id] = { ...this.data[id], ...toUpdate }
-        this.ui.notifySuccess({ message: 'Mise à jour éffectué' })
-        callback?.()
-      } catch (err) {
-        console.log('error', err)
-        this.ui.notifyError(`${err}`)
-      } finally {
-        this.loading = false
+        
+        Api.put({
+          url:'/fixedEquipment/'+id,
+          body:{...data},
+          onSuccess:(data:any)=>{
+            
+            this.data[`${data.id}`] = {...(data|| {})}
+            
+            this.ui.notifySuccess({ message: 'Mise à jour éffectuer', position: 'bottom-center' })
+            this.loading = false
+            callback?.()
+          },
+          onError:(err:any)=>{
+            this.ui.notifyError("veuillez changer la référence de l' équipement", 'bottom-center')
+            console.log("error whwn add fixed Equipement",err)
+            this.loading = false
+          }
+        })
+      }catch(err){
+        this.ui.notifyError('erreur' + err)
       }
     }
   }

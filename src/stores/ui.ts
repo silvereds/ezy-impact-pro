@@ -27,7 +27,7 @@ const useUiStore = defineStore('uiStore', {
     return {
       loader: true,
       selectable: null,
-      owner: [{ frName: 'propriétaire' }, { frName: 'locataire' }],
+      owner: [{ frName: 'propriétaire',value:"OWNER" }, { frName: 'locataire', value:"TENANT" }],
       declarer: [{ frName: 'user1',id:1 }, { frName: 'user2',id:2 }],
       selectableLoaded:false,
       stat: {},

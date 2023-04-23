@@ -13,7 +13,7 @@ import { SCOPE } from "@/dataType";
 import ConfirmDialog from 'primevue/confirmdialog';
 
 const store = fixeEqStore()
-const {data, fetching} = storeToRefs(store)
+const {data, loadingData} = storeToRefs(store)
 
 const confirm = useConfirm();
 
@@ -56,7 +56,7 @@ const onShow = (id:string)=>{
 
 const columns = [
   { title: "Référence", key: "reference", },
-  { title: "Type", key: "type",show:true },
+  { title: "Type", key: "type",show:true, formatter:(data:any)=>data.frName },
   { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
   {title:"Unité", key:"measureUnit"},
@@ -94,13 +94,13 @@ onMounted(async ()=> await store.getData())
                 title="Équipements fixes" 
                 subtitle="ce tableau liste tous les équipements fixes" 
                 :columns="columns.filter((el)=>el.show)" 
-                :data="(Object as any).values(data)"
+                :data="(Object as any).values(data || {})"
                 :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
                 :onDelete="onDelete"
                 :onShow="onShow"
                 :onEdit="onEdit"
-                :loading="fetching" 
+                :loading="loadingData" 
             />
         </div>
         <ConfirmDialog></ConfirmDialog>

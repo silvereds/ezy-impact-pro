@@ -13,7 +13,7 @@ import { SCOPE, type Select } from "@/dataType";
 import Dialog from "primevue/dialog";
 
 const store = mobileStore()
-const {data, fetching} = storeToRefs(store)
+const {data, loadingData} = storeToRefs(store)
 const ui = useUiStore()
 const confirm = useConfirm();
 
@@ -96,7 +96,7 @@ onMounted(async ()=> await store.getData())
                 :onDelete="onDelete"
                 :onShow="onShow"
                 :onEdit="onEdit"
-                :loading="fetching" 
+                :loading="loadingData" 
             />
         </div>
         <Dialog 

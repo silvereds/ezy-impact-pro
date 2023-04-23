@@ -14,6 +14,7 @@ export enum SCOPE {
   GES_ACTIVITIES = 'GES_ACTIVITIES'
 }
 
+
 export interface BUILDING {
   id?: string
   reference: string
@@ -24,34 +25,39 @@ export type Select = {
   id: string
   name: string
 }
-export interface MOBILES {
-  id?: string | null
-  reference: string | null
-  userId?: string | null
-  type: Select | null
-  brand: Select | null
-  model: Select | null
-  yearProduction: number | null
-  fuelUsed: Select | null
-  performanceValue: number | null
-  performanceUnit: Select | null
-  name: string | null
-  declarerId: string | null
-  owner: string | null
+
+type UNIT = {
+  reference: string,
+  unit: string,
+  value: string
 }
+
 export interface EQUIPMENT {
-  id?: string | null
-  reference: string | null
-  userId?: string | null
-  type: Select | null
-  brand: Select | null
-  model: Select | null
-  performanceValue: number | null
-  performanceUnit: Select | null
-  name: string | null
-  declarerId: string | null
-  owner: string | null
+  reference: string | null,
+  userId: string | null,
+  typeReference: UNIT | null,
+  fuelReference: UNIT | null,
+  performanceReference:UNIT | null ,
+  equipmentName: string | null,
+  buildingId: string|null,
+  enterpriseId: string|null,
+  ownerType: string|null,
+  declarationStatus?: string | null,
+  emissionFactor?: number|null,
+  emissionFactorDataSource?: string|null,
+  reportingFrequencyId?: number|null,
+  hypotheses?: string|null,
+  adminComment?: string|null
 }
+
+export interface MOBILES extends EQUIPMENT {
+  brand:UNIT | null,
+  modele:UNIT | null,
+  productionYear: number|null,
+}
+
+export interface FIXED_EQUIPMENT extends EQUIPMENT {}
+
 export interface ACTIVITIES {
   id?: string | null
   reference: string | null

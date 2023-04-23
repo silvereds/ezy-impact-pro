@@ -41,7 +41,7 @@ const post = async ({ url, body, onSuccess, onError }: ApiProps) => {
   }
   return await fetch(base_url + url, requestOptions)
     .then((res) => res.json())
-    .then((res) => onSuccess?.(res?.data))
+    .then((res) => res?.data? onSuccess?.(res?.data):onError?.(res))
     .catch((err) => onError?.(err))
 }
 

@@ -7,43 +7,45 @@ import Button from "primevue/button"
 import {storeToRefs} from "pinia";
 import fixeEqStore from "@/stores/MOBILE_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
-import type { MOBILES } from "@/dataType";
+import { SCOPE, type MOBILES } from "@/dataType";
 import InputNumber from 'primevue/inputnumber';
 
 const store = fixeEqStore()
 const ui = useUiStore()
 const props = defineProps<{itemId?:string, callback?:()=>void}>()
-const {owner , declarer } = storeToRefs(ui)
+const {owner , declarer, getSelectable } = storeToRefs(ui)
+const {brand,type,equipment_performance,model} = getSelectable.value(SCOPE.MOBILE_EQUIPMENT,['type','brand','model','fuel_used','equipment_performance'])
 
-const typeList:any = [{id:1,name:"type1"},{id:2,name:"type2"},{id:3,name:"type3"}]
-const brandList:any = {
-    1:{id:1,name:"marque1",model:[{id:1,name:"modele11"},{id:1,name:"modele12"}]},
-    2:{id:2,name:"marque2",model:[{id:1,name:"modele21"},{id:1,name:"modele22"}]}
-}
-const fuelList:any = {
-    1:{id:1, name:"combustible1"},
-    2:{id:2, name:"combustible2"},
-    3:{id:3, name:"combustible3"},
-}
+// const typeList:any = [{id:1,name:"type1"},{id:2,name:"type2"},{id:3,name:"type3"}]
+// const brandList:any = {
+//     1:{id:1,name:"marque1",model:[{id:1,name:"modele11"},{id:1,name:"modele12"}]},
+//     2:{id:2,name:"marque2",model:[{id:1,name:"modele21"},{id:1,name:"modele22"}]}
+// }
+// const fuelList:any = {
+//     1:{id:1, name:"combustible1"},
+//     2:{id:2, name:"combustible2"},
+//     3:{id:3, name:"combustible3"},
+// }
 
-const unitList:any ={
-    1:{id:1 , name:"km"},
-    2:{id:2 , name:"m"},
-    3:{id:3 , name:"kg"},
-} 
-
+// const unitList:any ={
+//     1:{id:1 , name:"km"},
+//     2:{id:2 , name:"m"},
+//     3:{id:3 , name:"kg"},
+// } 
+let performanceValue = ref(null)
 let data = ref<MOBILES>({
-  reference:null,
-  type: null,
-  brand: null,
-  model: null,
-  yearProduction: null,
-  fuelUsed: null,
-  performanceValue: null,
-  performanceUnit: null,
-  name: null,
-  declarerId: null,
-  owner: null,
+    reference: null,
+    userId: null,
+    typeReference:null,
+    fuelReference:null,
+    performanceReference:null ,
+    equipmentName: null,
+    buildingId: null,
+    enterpriseId: '1',
+    ownerType: null,
+    brand:null,
+    modele:null,
+    productionYear:null,
 })
 
 const onSave = ()=>{
@@ -74,28 +76,28 @@ onMounted(()=>{
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Type </label>
-                    <Dropdown  v-model="data.type" :options="typeList" optionLabel="name" class="input-ezy" />
+                    <Dropdown  v-model="data.typeReference" :options="type" optionLabel="name" class="input-ezy" />
                 </div>
         
             </div>
             <div class="flex flex-row align-items-center justify-content-between mt-5">
                 <div class="flex flex-column gap-2">
                     <label> Marque </label>
-                    <Dropdown  v-model="data.brand" :options="(Object as any).values(brandList)" optionLabel="name" class="input-ezy" />
+                    <Dropdown  v-model="data.brand" :options="(Object as any).values(brand)" optionLabel="name" class="input-ezy" />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Modèle </label>
-                    <Dropdown  v-model="data.model" :options="brandList?.[data.brand?.id as string]?.model" optionLabel="name" class="input-ezy" optionValue="name" />
+                    <Dropdown  v-model="data.modele" :options="[]" optionLabel="name" class="input-ezy" optionValue="name" />
                 </div>
             </div>
             <div class="flex flex-row align-items-center justify-content-between mt-3">
                 <div class="flex flex-column gap-2">
                     <label> Année de Production </label>
-                    <InputNumber v-model="data.yearProduction" class="input-ezy" inputId="integeronly" style="height:2.6rem" />
+                    <InputNumber v-model="data.productionYear" class="input-ezy" inputId="integeronly" style="height:2.6rem" />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Combustible utilisé </label>
-                    <Dropdown  v-model="data.fuelUsed" :options="(Object as any).values(fuelList)" optionLabel="name" class="input-ezy" />
+                    <Dropdown  v-model="data.fuelReference" :options="(Object as any).values(fuel_used)" optionLabel="name" class="input-ezy" />
                 </div>
             </div>
             <div class="flex flex-row align-items-center justify-content-between mt-5">
@@ -103,10 +105,10 @@ onMounted(()=>{
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Performance d'équipement </label>
                     <div class="flex">
-                        <InputNumber v-model="data.performanceValue" class="input-performance" style="height:2.6rem" />
+                        <InputNumber v-model="performanceValue" class="input-performance" style="height:2.6rem" />
                         <Dropdown  
-                            v-model="data.performanceUnit" 
-                            :options="(Object as any).values(unitList)"
+                            v-model="data.performanceReference" 
+                            :options="(Object as any).values(equipment_performance)"
                             optionLabel="name" 
                             class="select-unit" 
                         />
@@ -114,18 +116,18 @@ onMounted(()=>{
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Déclarant </label>
-                    <Dropdown  v-model="data.declarerId" :options="declarer" optionLabel="frName" class="input-ezy" optionValue="frName" />
+                    <Dropdown  v-model="data.userId" :options="declarer" optionLabel="frName" class="input-ezy" optionValue="frName" />
                 </div>
             </div>
             
             <div class="flex flex-row align-items-center justify-content-between mt-5">
                 <div class="flex flex-column gap-2">
                     <label> Nom de L équipement </label>
-                    <InputText v-model="data.name" class="input-ezy" style="height:2.6rem" />
+                    <InputText v-model="data.equipmentName" class="input-ezy" style="height:2.6rem" />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> type de propriété </label>
-                    <Dropdown optionValue="frName"  v-model="data.owner" :options="owner" optionLabel="frName" class="input-ezy" />
+                    <Dropdown optionValue="frName"  v-model="data.ownerType" :options="owner" optionLabel="frName" class="input-ezy" />
                 </div>
             </div>
             

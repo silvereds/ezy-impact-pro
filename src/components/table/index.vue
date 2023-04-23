@@ -71,8 +71,8 @@
             </Column>
             <Column header="Status" key="status">
                <template #body="slotProps">
-                    <span class="px-1" :style="getStatusStyle(slotProps.data.status)">
-                        {{  (nameStatus as any)?.[slotProps.data.status]?.toLowerCase() }}
+                    <span class="px-1" :style="getStatusStyle(slotProps.data.declarationStatus)">
+                        {{  (nameStatus as any)?.[slotProps.data.declarationStatus]?.toLowerCase() }}
                     </span>
                 </template>
             </Column>
@@ -87,13 +87,11 @@
                 <template #body="slotProps">
                     <div class="flex flex-row justify-content-end">
                         <Button size="small" style="background-color:#E5E3F1" icon="pi pi-eye" label="Voir" @click="props?.onShow?.(slotProps.data.id)" text />
-                        <!-- <Button severity="secondary" size="small" class="ml-2" icon="pi pi-pencil" rounded @click="props?.onEdit?.(slotProps.data.id)"  />
-                        <Button severity="danger"  size="small" class="ml-2" icon="pi pi-trash" rounded @click="props?.onDelete?.(slotProps.data.id)"  /> -->
-                        <Button severity="danger"  size="small" class="ml-2" icon="pi pi-trash" rounded @click="props?.onDelete?.(slotProps.data.id)"  />
+                       
+                        <!-- <Button severity="danger"  size="small" class="ml-2" icon="pi pi-trash" rounded @click="props?.onDelete?.(slotProps.data.id)"  /> -->
                     </div>
                 </template>
             </Column>
-            <!-- <template #footer> In total there are {{ products ? products.length : 0 }} products. </template> -->
         </DataTable>
     </div>
 </template>

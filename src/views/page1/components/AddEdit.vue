@@ -7,33 +7,48 @@ import Button from "primevue/button"
 import {storeToRefs} from "pinia";
 import fixeEqStore from "@/stores/FIXE_EQUIPMENT/store";
 import useUiStore from "@/stores/ui";
-import { SCOPE } from "@/dataType";
+import type { FIXED_EQUIPMENT } from "@/dataType";
+import  { SCOPE  } from "@/dataType";
+import buildingStore from "@/stores/BUILDING/store";
 
 
 const store = fixeEqStore()
 const ui = useUiStore()
-const props = defineProps<{itemId?:string, callback?:()=>void}>()
-const {building, units , fuelUsed , owner , declarer, getSelectable } = storeToRefs(ui)
-const {fuel_used,type,equipment_performance} = getSelectable.value(SCOPE.FIXE_EQUIPMENT,['type','fuel_used','equipment_performance'])
-console.log("selectable field", {fuel_used,type,equipment_performance})
+const {data:buildings} = storeToRefs(buildingStore())
 
-let data = ref<any>({
-    reference:null,
-    type:null,
-    fuelUsed:null,
-    performanceValue:null,
-    performanceUnit:null,
-    location:null,
-    declarer:null,
-    equipmentName:null,
-    owner:null,
+const props = defineProps<{itemId?:string, callback?:()=>void}>()
+const {owner , declarer, getSelectable } = storeToRefs(ui)
+const {fuel_used,type,equipment_performance} = getSelectable.value(SCOPE.FIXE_EQUIPMENT,['type','fuel_used','equipment_performance'])
+// console.log("selectable field", {fuel_used,type,equipment_performance})
+// console.log("building here", buildings.value)
+
+const performanceValue = ref<string|null>(null)
+
+let data = ref<FIXED_EQUIPMENT>({
+    reference: null,
+    userId: null,
+    typeReference:null,
+    fuelReference:null,
+    performanceReference:null ,
+    equipmentName: null,
+    buildingId: null,
+    enterpriseId: '1',
+    ownerType: null,
 })
 
 const onSave = ()=>{
-    const d:any = data.value
+    const d:FIXED_EQUIPMENT = data.value 
+
+    if((Object as any).values(d).some((el:any) => el === null) || performanceValue.value === null){
+        alert("remplir tous les champs")
+        return
+    }
+    console.log({...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}})
     if(!props?.itemId){
-        
-        store.addData({data:d,callback:props?.callback})
+        store.addData({
+            data:{...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}},
+            callback:props?.callback
+        })
     }else{
         store.updateData({data:d,callback:()=>{}, id:props?.itemId})
     }
@@ -56,23 +71,32 @@ onMounted(()=>{
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Type </label>
-                    <Dropdown  v-model="data.type" :options="type" optionLabel="frName" optionValue="frName" class="input-ezy" />
+                    <Dropdown  
+                        v-model="data.typeReference" 
+                        :options="type.map((el:any)=>({reference:el?.reference,unit:el?.name,value:el.frName}))" 
+                        optionLabel="value" 
+                        class="input-ezy" 
+                    />
                 </div>
             </div>
             <div class="flex flex-row align-items-center justify-content-between mt-5">
                 <div class="flex flex-column gap-2">
                     <label> Combustible utilisé </label>
-                    <Dropdown  v-model="data.fuelUsed" :options="fuelUsed" optionLabel="frName" optionValue="frName" class="input-ezy" />
+                    <Dropdown  
+                        v-model="data.fuelReference" 
+                        :options="fuel_used.map((el:any)=>({reference:el?.reference,unit:el?.name,value:el.frName}))" 
+                        optionLabel="value" 
+                        class="input-ezy" 
+                    />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Performance d'équipement </label>
                     <div class="flex">
-                        <InputText v-model="data.performanceValue" class="input-performance" style="height:2.6rem" />
+                        <InputText v-model="performanceValue" class="input-performance" style="height:2.6rem" />
                         <Dropdown  
-                            v-model="data.performanceUnit" 
-                            :options="units" 
-                            optionLabel="frName"
-                            optionValue="frName" 
+                            v-model="data.performanceReference" 
+                            :options="equipment_performance.map((el:any)=>({reference:el?.reference,unit:el?.name,value:el.frName}))" 
+                            optionLabel="value"
                             class="select-unit" 
                         />
                     </div>
@@ -82,11 +106,18 @@ onMounted(()=>{
             <div class="flex flex-row align-items-center justify-content-between mt-5">
                 <div class="flex flex-column gap-2">
                     <label> Emplacement </label>
-                    <Dropdown placeholder="sur quel bâtiment"  v-model="data.location" :options="building" optionLabel="frName" class="input-ezy" optionValue="frName" />
+                    <Dropdown 
+                        placeholder="sur quel bâtiment"  
+                        v-model="data.buildingId" 
+                        :options="(Object as any).values(buildings)" 
+                        optionLabel="nameOfTheSite" 
+                        class="input-ezy" 
+                        optionValue="id" 
+                    />
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Déclarant </label>
-                    <Dropdown  v-model="data.declarer" :options="declarer" optionLabel="frName" class="input-ezy" optionValue="frName" />
+                    <Dropdown  v-model="data.userId" :options="declarer" optionLabel="frName" class="input-ezy" optionValue="frName" />
                 </div>
             </div>
             <div class="flex flex-row align-items-center justify-content-between mt-5">
@@ -96,7 +127,7 @@ onMounted(()=>{
                 </div>
                 <div class="flex flex-column ml-2 gap-2">
                     <label> type de propriété </label>
-                    <Dropdown optionValue="frName"  v-model="data.owner" :options="owner" optionLabel="frName" class="input-ezy" />
+                    <Dropdown optionValue="value"  v-model="data.ownerType" :options="owner" optionLabel="frName" class="input-ezy" />
                 </div>
             </div>
             
