@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '../layout/Layout.vue'
-import Page1 from '../views/page1/index.vue'
+import Page1 from '../views/page1/fixedEquipment.vue'
 import Page2 from '../views/page2/index.vue'
 import Page3 from '../views/page3/index.vue'
 import Page4 from '../views/page4/index.vue'

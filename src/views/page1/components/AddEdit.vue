@@ -10,7 +10,7 @@ import useUiStore from "@/stores/ui";
 import type { FIXED_EQUIPMENT } from "@/dataType";
 import  { SCOPE  } from "@/dataType";
 import buildingStore from "@/stores/BUILDING/store";
-
+import InputNumber from 'primevue/inputnumber';
 
 const store = fixeEqStore()
 const ui = useUiStore()
@@ -22,7 +22,7 @@ const {fuel_used,type,equipment_performance} = getSelectable.value(SCOPE.FIXE_EQ
 // console.log("selectable field", {fuel_used,type,equipment_performance})
 // console.log("building here", buildings.value)
 
-const performanceValue = ref<string|null>(null)
+const performanceValue = ref<number|null>(null)
 
 let data = ref<FIXED_EQUIPMENT>({
     reference: null,
@@ -55,7 +55,30 @@ const onSave = ()=>{
 }
 onMounted(()=>{
     if(props?.itemId){
-        data.value = {...data.value , ...(store.data[props?.itemId] || {}) }
+        const item = store.data[props?.itemId] || {}
+        //console.log("selected item", item)
+        data.value.buildingId = item?.building?.id
+        data.value.reference = item?.reference
+        performanceValue.value = item?.equipmentPerformanceValue
+        data.value.userId = item?.userId
+        data.value.ownerType = item?.ownerType
+        data.value.equipmentName = item?.equipmentName
+        data.value.typeReference = {
+            reference:item?.type?.reference,
+            unit:item?.type?.name,
+            value:item?.type?.frName,
+        }
+        data.value.fuelReference = {
+            reference:item?.fuelUsed?.reference,
+            unit:item?.fuelUsed?.name,
+            value:item?.fuelUsed?.frName,
+        }
+        data.value.performanceReference = {
+            reference:item?.equipmentPerformance?.reference,
+            unit:item?.equipmentPerformance?.name,
+            value:item?.equipmentPerformanceValue
+        }
+        
     }
 })
 
@@ -92,7 +115,7 @@ onMounted(()=>{
                 <div class="flex flex-column ml-2 gap-2">
                     <label> Performance d'équipement </label>
                     <div class="flex">
-                        <InputText v-model="performanceValue" class="input-performance" style="height:2.6rem" />
+                        <InputNumber v-model="performanceValue" class="input-performance" style="height:2.6rem" />
                         <Dropdown  
                             v-model="data.performanceReference" 
                             :options="equipment_performance.map((el:any)=>({reference:el?.reference,unit:el?.name,value:el.frName}))" 

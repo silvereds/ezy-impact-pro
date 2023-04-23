@@ -66,8 +66,9 @@ a {
 .text-title {
   font-size: 16px;
   font-family: 'Open Sans';
-  font-weight: 400;
+  font-weight: 550;
   color: #657380;
+  text-transform:capitalize
 }
 
 @media (max-width: $breakpoint-lg) {
@@ -279,4 +280,8 @@ label {
   font-weight: 550;
   font-size: 16px;
   color: #515c66;
+}
+.card-detail{
+  background-color:$bg-silver;
+  border-radius:5px
 }

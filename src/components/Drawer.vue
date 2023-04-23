@@ -9,10 +9,12 @@ import TabPanel from 'primevue/tabpanel';
 const props = defineProps<{
     selectedId?:string,
     visible:boolean,
+    item:any,
     onClose:()=>void, 
+    onDelete:(id:string)=>void,
     category:string
 }>()
-const {visible , selectedId , onClose, category} = toRefs(props)
+const {visible , selectedId , onClose, category,item} = toRefs(props)
 
 
 
@@ -27,10 +29,13 @@ const {visible , selectedId , onClose, category} = toRefs(props)
                             <span class="flex align-items-center text-primary" style="font-weight:600">
                                 Réference <br/>
                             </span>
-                            <span style="font-size:12px;font-weight:400">ref 12 9000000 ORT </span>
+                            <span style="font-size:12px;font-weight:400">{{ item?.reference }}</span>
                         </div>
                     </div>
-                    <Button text icon="pi pi-times" @click="onClose()" />
+                    <div class="flex">
+                        <Button icon="pi pi-trash" severity="danger" label="supprimer" @click="onDelete(selectedId as string)" />
+                        <Button text icon="pi pi-times" @click="onClose()" />
+                    </div>
                 </div>
             </template>
                 <div class="card" style="width:100%;height:100%">

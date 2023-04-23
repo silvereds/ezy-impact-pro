@@ -11,9 +11,12 @@ import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
 import { SCOPE } from "@/dataType";
 import ConfirmDialog from 'primevue/confirmdialog';
+import BlockUI from 'primevue/blockui';
+import CardDetail from "@/components/CardDetail.vue";
+import { OWNER_TYPE_LABEL } from "@/utils/constant";
 
 const store = fixeEqStore()
-const {data, loadingData} = storeToRefs(store)
+const {data, loadingData,loading} = storeToRefs(store)
 
 const confirm = useConfirm();
 
@@ -29,14 +32,13 @@ const onStatusChange = (status:string)=>{
 }
 
 const onDelete = (id:string)=>{
-   
     confirm.require({
-        message: 'Are you sure you want to proceed?',
-        header: 'Confirmation',
+        message: 'Êtes vous sûre de vouloir supprimer cet équipement?',
+        header: 'Supression',
         icon: 'pi pi-exclamation-triangle',
         acceptClass: 'p-button-danger',
         accept: () => {
-            console.log("confirmed", id)
+            store.deleteData({id,callback:()=>{ showDetail.value = false}})
         },
         reject: () => {
             console.log("rejected")
@@ -49,9 +51,11 @@ console.log("id", id)
 }
 
 const onShow = (id:string)=>{
+    
     selectedItem.value = (data.value as any)?.[id]
     selectedId.value = id
     showDetail.value = true;
+    console.log(selectedItem.value)
 }
 
 const columns = [
@@ -97,7 +101,6 @@ onMounted(async ()=> await store.getData())
                 :data="(Object as any).values(data || {})"
                 :onNew="()=>open = true"
                 :onStatusChange="onStatusChange"
-                :onDelete="onDelete"
                 :onShow="onShow"
                 :onEdit="onEdit"
                 :loading="loadingData" 
@@ -122,11 +125,33 @@ onMounted(async ()=> await store.getData())
             :onClose="()=>showDetail = false" 
             :visible="showDetail" 
             :selectedId="selectedId"
+            :item="selectedItem"
+            :onDelete="onDelete"
             :category="SCOPE.FIXE_EQUIPMENT"
         >
             <template v-slot:detail>
-                <div>
-                    {{ selectedItem?.type }}
+                <div class="grid">
+                    <div class="md:col-6">
+                        <CardDetail title="type" :value="selectedItem?.type?.frName" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-shield" title="Combustible utilisé" :value="selectedItem?.fuelUsed?.frName" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-stop-circle" title="performance" :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-user" title="déclarant" :value="selectedItem?.userId" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-eject" title="type de propriété" :value="(OWNER_TYPE_LABEL as any)[selectedItem?.ownerType]" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-bolt" title="nom de l équipement" :value="selectedItem?.equipmentName" />
+                    </div>
+                    <div class="md:col-6">
+                        <CardDetail icon="pi pi-bolt" title="emplacement" :value="selectedItem?.building?.nameOfTheSite" />
+                    </div>
                 </div>
             </template>
             <template v-slot:update>
@@ -135,6 +160,8 @@ onMounted(async ()=> await store.getData())
                 </div>
             </template>
         </Drawer>
+        <BlockUI :blocked="loading" fullScreen class="flex align-items-center justify-content-center">
+        </BlockUI>
     </div>
     
 </template>

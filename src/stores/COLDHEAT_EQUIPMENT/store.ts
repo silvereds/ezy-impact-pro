@@ -95,7 +95,6 @@ const store = defineStore('COLD_HEAT_EQUIPMENT', {
         const toUpdate = {
           ...data,
           status: STATUS.PENDING,
-
           updatedAt: serverTimestamp()
         }
 

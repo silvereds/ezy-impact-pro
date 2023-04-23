@@ -26,9 +26,11 @@ const fixeEqStore = defineStore('fixeEq', {
         this.loadingData = true
         Api.get({
           url: '/fixedEquipment/enterprise/1',
-          onSuccess: (data: any) => {
-            this.data = data || {}
-            console.log("fixed equipement list",data)
+          onSuccess: (data: any[] = []) => {
+            data?.forEach((el:any)=>{
+              this.data[el.id] = el
+            })
+            //console.log("fixed equipement list",this.data)
             this.onlyFetch = true
             this.loadingData = false
           },
@@ -69,7 +71,7 @@ const fixeEqStore = defineStore('fixeEq', {
         
         Api.put({
           url:'/fixedEquipment/'+id,
-          body:{...data},
+          body:{...data,declarationStatus:STATUS.PENDING},
           onSuccess:(data:any)=>{
             
             this.data[`${data.id}`] = {...(data|| {})}
@@ -80,6 +82,28 @@ const fixeEqStore = defineStore('fixeEq', {
           },
           onError:(err:any)=>{
             this.ui.notifyError("veuillez changer la référence de l' équipement", 'bottom-center')
+            console.log("error whwn add fixed Equipement",err)
+            this.loading = false
+          }
+        })
+      }catch(err){
+        this.ui.notifyError('erreur' + err)
+      }
+    },
+    async deleteData({callback, id }: {callback?: () => void; id: string }) {
+      try{
+        this.loading = true
+        
+        Api.del({
+          url:'/fixedEquipment/'+id,
+          onSuccess:()=>{
+            delete this.data[id]
+            this.ui.notifySuccess({ message: 'Donnée supprimée', position: 'bottom-center' })
+            this.loading = false
+            callback?.()
+          },
+          onError:(err:any)=>{
+            this.ui.notifyError("une erreur s'est produite", 'bottom-center')
             console.log("error whwn add fixed Equipement",err)
             this.loading = false
           }

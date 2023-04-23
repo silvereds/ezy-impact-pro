@@ -28,7 +28,7 @@ const mobileEqStore = defineStore('mobileEq', {
           url: '/mobileEquipment/enterprise/1',
           onSuccess: (data: any) => {
             this.data = data || {}
-            console.log("mobile equipement list",data)
+            //console.log("mobile equipement list",data)
             this.onlyFetch = true
             this.loadingData = false
           },
