@@ -43,20 +43,21 @@ const onSave = ()=>{
         alert("remplir tous les champs")
         return
     }
-    console.log({...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}})
+    const toSend:any = {...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}}
+    console.log("toSend", toSend)
     if(!props?.itemId){
         store.addData({
-            data:{...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}},
+            data:toSend,
             callback:props?.callback
         })
     }else{
-        store.updateData({data:d,callback:()=>{}, id:props?.itemId})
+        store.updateData({data:toSend,callback:()=>{}, id:props?.itemId})
     }
 }
 onMounted(()=>{
     if(props?.itemId){
-        const item = store.data[props?.itemId] || {}
-        //console.log("selected item", item)
+        const item = store.select(props?.itemId) || {}
+        console.log("selected item", item)
         data.value.buildingId = item?.building?.id
         data.value.reference = item?.reference
         performanceValue.value = item?.equipmentPerformanceValue
@@ -76,7 +77,7 @@ onMounted(()=>{
         data.value.performanceReference = {
             reference:item?.equipmentPerformance?.reference,
             unit:item?.equipmentPerformance?.name,
-            value:item?.equipmentPerformanceValue
+            value:item?.equipmentPerformance?.frName,
         }
         
     }

@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import Api from '../api/fetchWrapper'
 import { useToast } from 'vue-toastification'
-import { doc, getDoc } from 'firebase/firestore'
-import db from '@/firebaseConfig'
 
 const innerOption = {
   position: 'top-center',

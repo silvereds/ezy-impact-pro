@@ -7,6 +7,7 @@ import { doc, setDoc, getDocs, collection } from 'firebase/firestore'
 import db from '@/firebaseConfig'
 import useUiStore from '../ui'
 import Api from '@/api/fetchWrapper'
+import useAuthStore from '../authStore'
 
 const initialState: any = {}
 
@@ -17,37 +18,44 @@ const buildingStore = defineStore('building', {
       loading: false,
       loader:false,
       buildingLoaded:false,
-      ui: useUiStore()
+      ui: useUiStore(),
+      auth:useAuthStore()
     }
   },
   getters: {
     getFormatted: (state) => {
       return state.data
+    },
+    getBuilding:(state)=>{
+      if(!state.auth.user){
+        return []
+      }
+      return (Object as any).values(state.data).filter((b:any)=>b.enterpriseId === (state.auth.user as any).id)
     }
   },
   actions: {
     // to get all building of system
     async getData() {
-      if(!this.buildingLoaded){
-        try{
-          Api.get({
-            url: '/building/all',
-            onSuccess: (data: any) => {
-              // console.log("data",data)
-              data.forEach((building:any)=>{
-                this.data[building?.id] = building
-              })
-            },
-            onError: (err: any) => {
-              console.log('error', err)
-            }
-          })
-        }catch(err){
-          console.log("error when fetching building",err)
-        }finally{
-          this.buildingLoaded = true
-          this.loader = false
-        }
+        if(!this.buildingLoaded){
+          try{
+            Api.get({
+              url: '/building/all',
+              onSuccess: (data: any) => {
+                // console.log("data",data)
+                data.forEach((building:any)=>{
+                  this.data[building?.id] = building
+                })
+              },
+              onError: (err: any) => {
+                console.log('error', err)
+              }
+            })
+          }catch(err){
+            console.log("error when fetching building",err)
+          }finally{
+            this.buildingLoaded = true
+            this.loader = false
+          }
       }
     },
     // to add building 

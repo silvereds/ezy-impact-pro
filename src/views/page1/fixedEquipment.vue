@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import {ref, onMounted, computed} from "vue";
+import {ref, onMounted, computed, watch} from "vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
 import Dialog from "primevue/dialog";
@@ -14,10 +14,12 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import BlockUI from 'primevue/blockui';
 import CardDetail from "@/components/CardDetail.vue";
 import { OWNER_TYPE_LABEL } from "@/utils/constant";
+import useAuthStore from "@/stores/authStore";
+import NoSelect from "@/components/NoSelect.vue";
 
 const store = fixeEqStore()
 const {data, loadingData,loading} = storeToRefs(store)
-
+const auth = useAuthStore()
 const confirm = useConfirm();
 
 const searchText = ref('')
@@ -54,7 +56,7 @@ console.log("id", id)
 
 const onShow = (id:string)=>{
     
-    selectedItem.value = (data.value as any)?.[id]
+    selectedItem.value = store.select(id)
     selectedId.value = id
     showDetail.value = true;
     console.log(selectedItem.value)
@@ -73,9 +75,14 @@ const columns = [
 ];
 
 onMounted(async ()=> await store.getData())
-
+watch(()=>auth.user,(newUser:any,oldUser:any)=>{
+    store.getData()
+    console.log("new user", newUser)
+    console.log("old user", oldUser)
+})
 const filterData = computed(()=>{
-    const d = (Object as any).values(data.value || {})
+    const d = (Object as any).values(store.getFixedEquiment)
+    console.log("fixe equipemnt in store", d)
     const filter = (el:any)=>{
         return (
             el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
@@ -95,7 +102,7 @@ const filterData = computed(()=>{
 </script>
 <template>
     <div class="mt-2 bg-red h-100">
-        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3">
+        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3 header-content">
             <div class="flex flex-row align-items-center">
                 <i class="ri-send-to-back" style="font-size:2rem"></i> 
                 <span class="mr-2">
@@ -112,75 +119,110 @@ const filterData = computed(()=>{
                 <InputText class="p-inputtext-sm" v-model="searchText" placeholder="Search" style="border-radius:20px;width:100%" />
             </span>
         </div>
-        <div class="pa-2">
-            <Table 
-                title="Équipements fixes" 
-                subtitle="ce tableau liste tous les équipements fixes" 
-                :columns="columns.filter((el)=>el.show)" 
-                :data="filterData"
-                :onNew="()=>open = true"
-                :onStatusChange="onStatusChange"
-                :onShow="onShow"
-                :onEdit="onEdit"
-                :loading="loadingData" 
-            />
+        <div v-if="auth.user">
+            <div class="pa-2">
+                <Table 
+                    title="Équipements fixes" 
+                    subtitle="ce tableau liste tous les équipements fixes" 
+                    :columns="columns.filter((el)=>el.show)" 
+                    :data="filterData"
+                    :onNew="()=>open = true"
+                    :onStatusChange="onStatusChange"
+                    :onShow="onShow"
+                    :onEdit="onEdit"
+                    :loading="loadingData" 
+                />
+            </div>
+            <ConfirmDialog></ConfirmDialog>
+            <Dialog 
+                v-model:visible="open" 
+                modal 
+                :style="{ backgroundColor:'#fff' }" 
+                position="center"
+            >
+                <template #header>
+                    <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
+                        <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
+                        <span style="font-size:18px;font-weight:600"> Nouvel Equipement fixe  </span>
+                    </div>
+                </template>
+                <AddEdit :callback="()=>open = false" />
+            </Dialog>
+            <Drawer 
+                :onClose="()=>showDetail = false" 
+                :visible="showDetail" 
+                :selectedId="selectedId"
+                :item="selectedItem"
+                :onDelete="onDelete"
+                :category="SCOPE.FIXE_EQUIPMENT"
+            >
+                <template v-slot:detail>
+                    <div class="grid">
+                        <div class="md:col-6">
+                            <CardDetail 
+                                title="type" 
+                                :value="selectedItem?.type?.frName" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-shield" 
+                                title="Combustible utilisé" 
+                                :value="selectedItem?.fuelUsed?.frName" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-stop-circle" 
+                                title="performance" 
+                                :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-user" 
+                                title="déclarant" 
+                                :value="selectedItem?.userId" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-eject" 
+                                title="type de propriété" 
+                                :value="(OWNER_TYPE_LABEL as any)[selectedItem?.ownerType]" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-bolt" 
+                                title="nom de l équipement" 
+                                :value="selectedItem?.equipmentName" 
+                            />
+                        </div>
+                        <div class="md:col-6">
+                            <CardDetail 
+                                icon="pi pi-bolt" 
+                                title="emplacement" 
+                                :value="selectedItem?.building?.nameOfTheSite" 
+                            />
+                        </div>
+                    </div>
+                </template>
+                <template v-slot:update>
+                    <div>
+                        <AddEdit :itemId="selectedId" />
+                    </div>
+                </template>
+                <template v-slot:declaration>
+                    <div>
+                        declaration ici maintenant 
+                    </div>
+                </template>
+            </Drawer>
+            <BlockUI :blocked="loading" fullScreen class="flex align-items-center justify-content-center">
+            </BlockUI>
         </div>
-        <ConfirmDialog></ConfirmDialog>
-        <Dialog 
-            v-model:visible="open" 
-            modal 
-            :style="{ backgroundColor:'#fff' }" 
-            position="center"
-        >
-            <template #header>
-                <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
-                    <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
-                    <span style="font-size:18px;font-weight:600"> Nouvel Equipement fixe  </span>
-                </div>
-            </template>
-            <AddEdit :callback="()=>open = false" />
-        </Dialog>
-        <Drawer 
-            :onClose="()=>showDetail = false" 
-            :visible="showDetail" 
-            :selectedId="selectedId"
-            :item="selectedItem"
-            :onDelete="onDelete"
-            :category="SCOPE.FIXE_EQUIPMENT"
-        >
-            <template v-slot:detail>
-                <div class="grid">
-                    <div class="md:col-6">
-                        <CardDetail title="type" :value="selectedItem?.type?.frName" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-shield" title="Combustible utilisé" :value="selectedItem?.fuelUsed?.frName" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-stop-circle" title="performance" :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-user" title="déclarant" :value="selectedItem?.userId" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-eject" title="type de propriété" :value="(OWNER_TYPE_LABEL as any)[selectedItem?.ownerType]" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-bolt" title="nom de l équipement" :value="selectedItem?.equipmentName" />
-                    </div>
-                    <div class="md:col-6">
-                        <CardDetail icon="pi pi-bolt" title="emplacement" :value="selectedItem?.building?.nameOfTheSite" />
-                    </div>
-                </div>
-            </template>
-            <template v-slot:update>
-                <div>
-                    <AddEdit :itemId="selectedId" />
-                </div>
-            </template>
-        </Drawer>
-        <BlockUI :blocked="loading" fullScreen class="flex align-items-center justify-content-center">
-        </BlockUI>
+        <NoSelect v-else />
     </div>
     
 </template>

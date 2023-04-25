@@ -15,9 +15,6 @@ const props = defineProps<{
     category:string
 }>()
 const {visible , selectedId , onClose, category,item} = toRefs(props)
-
-
-
 </script>
 <template>
     <Sidebar :visible="visible" style="width:50vw" :showCloseIcon="false" position="right">
@@ -41,9 +38,7 @@ const {visible , selectedId , onClose, category,item} = toRefs(props)
                 <div class="card" style="width:100%;height:100%">
                     <TabView>
                         <TabPanel header="Détail" style="background-color:red">
-                            
-                                <slot name="detail"></slot>
-                            
+                            <slot name="detail"></slot>
                         </TabPanel>
                         <TabPanel header="Modifier">
                             <slot name="update"></slot>
@@ -52,7 +47,7 @@ const {visible , selectedId , onClose, category,item} = toRefs(props)
                             <ValidationForm :category="category" :itemId="selectedId" />
                         </TabPanel>
                         <TabPanel header="Déclaration">
-                            <p> déclaration </p>
+                            <slot name="declaration"></slot>
                         </TabPanel>
                     </TabView>
                 </div>
