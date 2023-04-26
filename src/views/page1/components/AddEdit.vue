@@ -19,8 +19,6 @@ const {data:buildings} = storeToRefs(buildingStore())
 const props = defineProps<{itemId?:string, callback?:()=>void}>()
 const {owner , declarer, getSelectable } = storeToRefs(ui)
 const {fuel_used,type,equipment_performance} = getSelectable.value(SCOPE.FIXE_EQUIPMENT,['type','fuel_used','equipment_performance'])
-// console.log("selectable field", {fuel_used,type,equipment_performance})
-// console.log("building here", buildings.value)
 
 const performanceValue = ref<number|null>(null)
 
@@ -44,7 +42,7 @@ const onSave = ()=>{
         return
     }
     const toSend:any = {...d,performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}}
-    console.log("toSend", toSend)
+    // console.log("toSend", toSend)
     if(!props?.itemId){
         store.addData({
             data:toSend,
@@ -57,7 +55,7 @@ const onSave = ()=>{
 onMounted(()=>{
     if(props?.itemId){
         const item = store.select(props?.itemId) || {}
-        console.log("selected item", item)
+       
         data.value.buildingId = item?.building?.id
         data.value.reference = item?.reference
         performanceValue.value = item?.equipmentPerformanceValue

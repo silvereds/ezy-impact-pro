@@ -1,4 +1,4 @@
-enum STATUS {
+export enum STATUS {
   ALL = 'ALL',
   DRAFT = 'DRAFT',
   PENDING = 'PENDING',
@@ -32,6 +32,8 @@ type UNIT = {
   value: string
 }
 
+
+
 export interface EQUIPMENT {
   reference: string | null,
   userId: string | null,
@@ -43,11 +45,13 @@ export interface EQUIPMENT {
   enterpriseId: string|null,
   ownerType: string|null,
   declarationStatus?: string | null,
-  emissionFactor?: number|null,
+}
+export interface VALIDATION_EQUIPMENT extends EQUIPMENT{
+  emissionFactor: number|null,
   emissionFactorDataSource?: string|null,
-  reportingFrequencyId?: number|null,
-  hypotheses?: string|null,
-  adminComment?: string|null
+  reportingFrequencyId: string | null,
+  hypotheses?: string,
+  adminComment?: string
 }
 
 export interface MOBILES extends EQUIPMENT {

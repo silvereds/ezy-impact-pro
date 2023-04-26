@@ -44,7 +44,7 @@ const {visible , selectedId , onClose, category,item} = toRefs(props)
                             <slot name="update"></slot>
                         </TabPanel>
                         <TabPanel header="Validation">
-                            <ValidationForm :category="category" :itemId="selectedId" />
+                            <slot name="validation"></slot>
                         </TabPanel>
                         <TabPanel header="Déclaration">
                             <slot name="declaration"></slot>

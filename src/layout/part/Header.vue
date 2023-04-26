@@ -19,19 +19,19 @@ const {userList, user:selected} = storeToRefs(auth)
         <header class="header">
             <div class="flex-row-between">
                 <div 
-                    class="p-1 pl-3 text-color bg-primary" 
+                    class="p-1 pl-3 text-color" 
                     @click="toggle" 
-                    style="width:25rem;color:#fff;border-radius:5px;cursor:pointer"
+                    style="width:25rem;color:#00000;border-radius:5px;cursor:pointer;background-color:#e8eff9"
                 >
                     <div v-if="selected" class="flex align-items-center text-color">
                         <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" class="mr-2" shape="circle" />
                         <div class="flex flex-column align">
-                            <span class="font-bold" style="color:#fff"> {{ (selected as any)?.name}} </span>
-                            <span class="text-sm" style="color:#fff">Entreprise</span>
+                            <span class="font-bold"> {{ (selected as any)?.name}} </span>
+                            <span class="text-sm">Entreprise</span>
                         </div>
                     </div>
-                    <div v-else style="color:#fff" class="flex align-items-center justify-content-center p-1">
-                        cliquer ici pour selectionner un utilsateur
+                    <div v-else style="color:#00000" class="flex align-items-center justify-content-center p-1 py-2">
+                        <span>Cliquer ici pour selectionner un utilsateur</span>
                     </div>       
                 </div>
                 <OverlayPanel ref="op" style="width:25rem">

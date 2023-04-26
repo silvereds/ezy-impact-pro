@@ -16,12 +16,13 @@ import CardDetail from "@/components/CardDetail.vue";
 import { OWNER_TYPE_LABEL } from "@/utils/constant";
 import useAuthStore from "@/stores/authStore";
 import NoSelect from "@/components/NoSelect.vue";
+import Declaration from "./components/Declaration.vue";
+import ValidationForm from "./components/ValidationForm.vue";
 
 const store = fixeEqStore()
-const {data, loadingData,loading} = storeToRefs(store)
+const {loadingData,loading} = storeToRefs(store)
 const auth = useAuthStore()
 const confirm = useConfirm();
-
 const searchText = ref('')
 const declarationStatus = ref('ALL')
 const open = ref(false)
@@ -31,7 +32,6 @@ const selectedItem = ref<any>(null)
 
 
 const onStatusChange = (status:string)=>{
-    console.log("status here",status)
     declarationStatus.value = status
 }
 
@@ -59,7 +59,7 @@ const onShow = (id:string)=>{
     selectedItem.value = store.select(id)
     selectedId.value = id
     showDetail.value = true;
-    console.log(selectedItem.value)
+    
 }
 
 const columns = [
@@ -213,9 +213,12 @@ const filterData = computed(()=>{
                         <AddEdit :itemId="selectedId" />
                     </div>
                 </template>
+                <template v-slot:validation>
+                    <ValidationForm :itemId="selectedId as string" />
+                </template>
                 <template v-slot:declaration>
                     <div>
-                        declaration ici maintenant 
+                        <Declaration /> 
                     </div>
                 </template>
             </Drawer>

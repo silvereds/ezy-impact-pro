@@ -25,6 +25,7 @@ const useUiStore = defineStore('uiStore', {
     return {
       loader: true,
       selectable: null,
+      frequence:null,
       owner: [{ frName: 'propriétaire',value:"OWNER" }, { frName: 'locataire', value:"TENANT" }],
       declarer: [{ frName: 'user1',id:1 }, { frName: 'user2',id:2 }],
       selectableLoaded:false,
@@ -49,9 +50,28 @@ const useUiStore = defineStore('uiStore', {
             
             await Api.get({
               url: '/selectableField/all',
-              onSuccess: (data: any) => {
+              onSuccess: async (data: any) => {
                 this.selectable = data
+                // to get frequence declaration list
                 
+                if(!this.frequence){
+                  
+                  try{
+                    await Api.get({
+                      url: '/reportingFrequency/all',
+                      onSuccess: (data: any) => {
+                        this.frequence = data
+                        console.log("frequence", data)
+                      },
+                      onError: (err: any) => {
+                        console.log('error', err)
+                      }
+                    })
+                  }catch(err){
+                    console.log("error when fetching frequence fields", err)
+                  }
+                }
+                // end get frequence declaration
               },
               onError: (err: any) => {
                 console.log('error', err)
@@ -60,7 +80,6 @@ const useUiStore = defineStore('uiStore', {
           }catch(err){
             console.log("error when fetching selectable fields", err)
           }finally{
-            this.selectableLoaded = true
             this.loader = false
           }
         }
