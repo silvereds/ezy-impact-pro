@@ -54,10 +54,41 @@ export interface VALIDATION_EQUIPMENT extends EQUIPMENT{
   adminComment?: string
 }
 
-export interface MOBILES extends EQUIPMENT {
-  brand:UNIT | null,
-  modele:UNIT | null,
-  productionYear: number|null,
+export interface MOBILES {
+  reference: string | null,
+  userId: string | null,
+  typeReference: UNIT | null,
+  fuelUsed: UNIT | null,
+  performanceReference:UNIT | null ,
+  equipmentName: string | null,
+  enterpriseId: string|null,
+  ownerType: string|null,
+  declarationStatus?: string | null,
+  brand?:UNIT | null,
+  modele?:UNIT | null,
+  productionYear?: number|null,
+  emissionFactor?: number|null,
+  emissionFactorDataSource?: string|null,
+  reportingFrequencyId?: string | null,
+  hypotheses?: string,
+  adminComment?: string
+}
+export interface ELECTRIC_DTO {
+  reference: string | null,
+  userId: string | null,
+  typeReference: UNIT | null,
+  performanceReference:UNIT | null ,
+  equipmentName: string | null,
+  enterpriseId: string|null,
+  ownerType: string|null,
+  declarationStatus?: string | null,
+  brand?:UNIT | null,
+  modele?:UNIT | null,
+  emissionFactor?: number|null,
+  emissionFactorDataSource?: string|null,
+  reportingFrequencyId?: string | null,
+  hypotheses?: string,
+  adminComment?: string
 }
 
 export interface FIXED_EQUIPMENT extends EQUIPMENT {}

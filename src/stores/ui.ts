@@ -27,7 +27,7 @@ const useUiStore = defineStore('uiStore', {
       selectable: null,
       frequence:null,
       owner: [{ frName: 'propriétaire',value:"OWNER" }, { frName: 'locataire', value:"TENANT" }],
-      declarer: [{ frName: 'user1',id:1 }, { frName: 'user2',id:2 }],
+      declarer: [{ frName: 'user1',id:'1' }, { frName: 'user2',id:'2' }],
       selectableLoaded:false,
       stat: {},
     }
@@ -38,7 +38,7 @@ const useUiStore = defineStore('uiStore', {
       //console.log("list here", list)
       const selectable:any = {}
       fields.forEach((el:string)=>{
-        selectable[el] = list.filter((data:any)=>data.type?.toLowerCase().includes(el?.toLowerCase()))
+        selectable[el] = list?.filter((data:any)=>data.type?.toLowerCase().includes(el?.toLowerCase()))
       })
       return selectable
     },

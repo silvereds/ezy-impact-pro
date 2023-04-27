@@ -1,25 +1,22 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import {ref, onMounted, watch, computed} from "vue";
-import BlockUI from 'primevue/blockui';
+import {ref , onMounted , watch , computed} from "vue";
+import ValidationForm from "./components/ValidationForm.vue";
+import Declaration from "./components/Declaration.vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
-import { useConfirm } from "primevue/useconfirm";
 import AddEdit from "./components/AddEdit.vue";
-import mobileStore from "@/stores/MOBILE_EQUIPMENT/store";
+import dataStore from "@/stores/ELECTRICAL_EQUIPMENT/store";
+import { useConfirm } from "primevue/useconfirm";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
 import { SCOPE, type Select } from "@/dataType";
 import Dialog from "primevue/dialog";
 import useAuthStore from "@/stores/authStore";
+import { OWNER_TYPE_LABEL } from "@/utils/constant";
 import NoSelect from "@/components/NoSelect.vue";
 import CardDetail from "@/components/CardDetail.vue";
-import { OWNER_TYPE_LABEL } from "@/utils/constant";
-import ValidationForm from "./components/ValidationForm.vue";
-import Declaration from "./components/Declaration.vue";
 
-const store = mobileStore()
-
+const store = dataStore()
 const {loadingData,loading} = storeToRefs(store)
 const auth = useAuthStore()
 const confirm = useConfirm();
@@ -33,6 +30,7 @@ const selectedItem = ref<any>(null)
 const onStatusChange = (status:string)=>{
     declarationStatus.value = status
 }
+
 
 const onDelete = (id:string)=>{
     confirm.require({
@@ -59,19 +57,23 @@ const onShow = (id:string)=>{
     showDetail.value = true;
     console.log("mobile equipment selected",selectedItem.value)
 }
-
 const columns = [
   { title: "Référence", key: "reference", show:true },
   { title: "Type", key: "type" , show:true, formatter:(data:any)=>data?.frName},
   { title: "Marque", key: "brand",show:true, formatter:(data:any)=>data?.frName },
   { title: "Modèle", key: "model" , show:true , formatter:(data:any)=>data?.frName},
+  {title:"Année de production" , key:"productionYear"},
+  { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
-  { title:"Unité", key:"measureUnit"},
-  { title: "Site", key: "nameOfTheSite" },
+  {title:"Unité", key:"measureUnit"},
+  
+  // { title: "Emplacement", key: "location" },
+  // { title: "Déclarant", key: "author" },
+  { title: "Nom d'équipement", key: "equipmentName",show:true },
   { title: "Propriétaire", key: "userId" },
-  { title: "Nom d'équipement", key: "equipmentName", show:true },
   {title:"Type de propriété" , key:"ownerType"},
 ];
+
 onMounted(async ()=> await store.getData())
 watch(()=>auth.user,(newUser:any,oldUser:any)=>{
     store.getData()
@@ -96,36 +98,30 @@ const filterData = computed(()=>{
 
     return statusData.filter(filter)
 })
-
 </script>
 <template>
     <div class="mt-2 bg-red h-100">
-        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3 header-content">
+        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3">
             <div class="flex flex-row align-items-center">
                 <i class="ri-send-to-back" style="font-size:2rem"></i> 
                 <span class="mr-2">
-                    Configurations
+                    Configuration
                 </span>
                 <i class="pi pi-angle-right"></i>
                 <span>
-                    Équipements mobiles
+                    Équipements électriques
                 </span>
             </div>
             <span class="p-input-icon-left" style="width:50%">
                 <i class="pi pi-search" />
-                <InputText 
-                    class="p-inputtext-sm" 
-                    v-model="searchText" 
-                    placeholder="Search" 
-                    style="border-radius:20px;width:100%" 
-                />
+                <InputText class="p-inputtext-sm" v-model="searchText" placeholder="Search" style="border-radius:20px;width:100%" />
             </span>
         </div>
         <div v-if="auth.user">
             <div class="pa-2">
                 <Table 
-                    title="Équipements mobiles" 
-                    subtitle="ce tableau liste tous les équipements mobiles" 
+                    title="Équipements électriques" 
+                    subtitle="ce tableau liste tous les équipements électriques" 
                     :columns="columns.filter((el)=>el.show)" 
                     :data="filterData"
                     :onNew="()=>open = true"
@@ -181,13 +177,6 @@ const filterData = computed(()=>{
                         </div>
                         <div class="md:col-6">
                             <CardDetail 
-                                icon="pi pi-shield" 
-                                title="Combustible utilisé" 
-                                :value="selectedItem?.fuelUsed?.frName" 
-                            />
-                        </div>
-                        <div class="md:col-6">
-                            <CardDetail 
                                 icon="pi pi-stop-circle" 
                                 title="performance" 
                                 :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" 
@@ -214,13 +203,7 @@ const filterData = computed(()=>{
                                 :value="selectedItem?.equipmentName" 
                             />
                         </div>
-                        <div class="md:col-6">
-                            <CardDetail 
-                                icon="pi pi-bolt" 
-                                title="année de production" 
-                                :value="selectedItem?.productionYear" 
-                            />
-                        </div>
+                        
                     </div>
                 </template>
                 <template v-slot:update>

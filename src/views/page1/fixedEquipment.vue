@@ -55,11 +55,9 @@ console.log("id", id)
 }
 
 const onShow = (id:string)=>{
-    
     selectedItem.value = store.select(id)
     selectedId.value = id
     showDetail.value = true;
-    
 }
 
 const columns = [
