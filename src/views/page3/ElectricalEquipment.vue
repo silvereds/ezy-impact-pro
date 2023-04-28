@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref , onMounted , watch , computed} from "vue";
+import ConfirmDialog from 'primevue/confirmdialog';
 import ValidationForm from "./components/ValidationForm.vue";
 import Declaration from "./components/Declaration.vue";
 import InputText from 'primevue/inputtext';
@@ -9,7 +10,7 @@ import dataStore from "@/stores/ELECTRICAL_EQUIPMENT/store";
 import { useConfirm } from "primevue/useconfirm";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
-import { SCOPE, type Select } from "@/dataType";
+import { SCOPE } from "@/dataType";
 import Dialog from "primevue/dialog";
 import useAuthStore from "@/stores/authStore";
 import { OWNER_TYPE_LABEL } from "@/utils/constant";
@@ -31,7 +32,6 @@ const onStatusChange = (status:string)=>{
     declarationStatus.value = status
 }
 
-
 const onDelete = (id:string)=>{
     confirm.require({
         message: 'Êtes vous sûre de vouloir supprimer cet équipement?',
@@ -45,10 +45,6 @@ const onDelete = (id:string)=>{
             console.log("rejected")
         },
     });
-}
-
-const onEdit = (id:string)=>{
-console.log("id", id)
 }
 
 const onShow = (id:string)=>{
@@ -66,23 +62,21 @@ const columns = [
   { title: "Combustible", key: "fuelUsed" },
   { title: "Performance", key: "equipmentPerformance" },
   {title:"Unité", key:"measureUnit"},
-  
-  // { title: "Emplacement", key: "location" },
-  // { title: "Déclarant", key: "author" },
   { title: "Nom d'équipement", key: "equipmentName",show:true },
   { title: "Propriétaire", key: "userId" },
   {title:"Type de propriété" , key:"ownerType"},
 ];
 
 onMounted(async ()=> await store.getData())
+
 watch(()=>auth.user,(newUser:any,oldUser:any)=>{
     store.getData()
     console.log("new user", newUser)
     console.log("old user", oldUser)
 })
+
 const filterData = computed(()=>{
     const d = (Object as any).values(store.getMobileEquiment)
-    console.log("mobile equipemnt in store", d)
     const filter = (el:any)=>{
         return (
             el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
@@ -101,7 +95,7 @@ const filterData = computed(()=>{
 </script>
 <template>
     <div class="mt-2 bg-red h-100">
-        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3">
+        <div class="header-content flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3">
             <div class="flex flex-row align-items-center">
                 <i class="ri-send-to-back" style="font-size:2rem"></i> 
                 <span class="mr-2">
@@ -128,7 +122,6 @@ const filterData = computed(()=>{
                     :onStatusChange="onStatusChange"
                     :onDelete="onDelete"
                     :onShow="onShow"
-                    :onEdit="onEdit"
                     :loading="loadingData" 
                 />
             </div>
@@ -153,7 +146,7 @@ const filterData = computed(()=>{
                 :selectedId="selectedId"
                 :item="selectedItem"
                 :onDelete="onDelete"
-                :category="SCOPE.MOBILE_EQUIPMENT"
+                :category="SCOPE.ELECTRICAL_EQUIPMENT"
             >
                 <template v-slot:detail>
                     <div class="grid">

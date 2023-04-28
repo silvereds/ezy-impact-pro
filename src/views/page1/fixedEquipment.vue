@@ -50,10 +50,6 @@ const onDelete = (id:string)=>{
     });
 }
 
-const onEdit = (id:string)=>{
-console.log("id", id)
-}
-
 const onShow = (id:string)=>{
     selectedItem.value = store.select(id)
     selectedId.value = id
@@ -80,7 +76,7 @@ watch(()=>auth.user,(newUser:any,oldUser:any)=>{
 })
 const filterData = computed(()=>{
     const d = (Object as any).values(store.getFixedEquiment)
-    console.log("fixe equipemnt in store", d)
+    // console.log("fixe equipemnt in store", d)
     const filter = (el:any)=>{
         return (
             el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
@@ -100,7 +96,7 @@ const filterData = computed(()=>{
 </script>
 <template>
     <div class="mt-2 bg-red h-100">
-        <div class="bg-white flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3 header-content">
+        <div class=" flex flex-row justify-content-between align-items-center pl-2 pr-3 py-3 header-content">
             <div class="flex flex-row align-items-center">
                 <i class="ri-send-to-back" style="font-size:2rem"></i> 
                 <span class="mr-2">
@@ -127,7 +123,7 @@ const filterData = computed(()=>{
                     :onNew="()=>open = true"
                     :onStatusChange="onStatusChange"
                     :onShow="onShow"
-                    :onEdit="onEdit"
+                    
                     :loading="loadingData" 
                 />
             </div>

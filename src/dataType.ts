@@ -11,7 +11,8 @@ export enum SCOPE {
   COLD_HEAT_EQUIPMENT = 'COLD_HEAT_EQUIPMENT',
   INDUSTRIAL_ACTIVITIES = 'INDUSTRIAL_ACTIVITIES',
   BIOMAS_ACTIVITIES = 'BIOMASS_ACTIVITIES',
-  GES_ACTIVITIES = 'GES_ACTIVITIES'
+  GES_ACTIVITIES = 'GES_ACTIVITIES',
+  COLD_AND_HEAT_EQUIPMENT='COLD_AND_HEAT_EQUIPMENT'
 }
 
 
@@ -79,6 +80,23 @@ export interface ELECTRIC_DTO {
   typeReference: UNIT | null,
   performanceReference:UNIT | null ,
   equipmentName: string | null,
+  enterpriseId: string|null,
+  ownerType: string|null,
+  declarationStatus?: string | null,
+  brand?:UNIT | null,
+  modele?:UNIT | null,
+  emissionFactor?: number|null,
+  emissionFactorDataSource?: string|null,
+  reportingFrequencyId?: string | null,
+  hypotheses?: string,
+  adminComment?: string
+}
+
+export interface COLD_HEAT_EQUIPMENT_DTO{
+  reference: string | null,
+  userId: string | null,
+  typeReference: UNIT | null,
+  performanceReference:UNIT | null ,
   enterpriseId: string|null,
   ownerType: string|null,
   declarationStatus?: string | null,

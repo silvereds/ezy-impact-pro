@@ -1,27 +1,25 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import {ref, onMounted, watch, computed} from "vue";
+import {ref , onMounted, computed, watch } from "vue";
 import ConfirmDialog from 'primevue/confirmdialog';
-import BlockUI from 'primevue/blockui';
-import InputText from 'primevue/inputtext';
-import Table from "@/components/table/index.vue";
-import { useConfirm } from "primevue/useconfirm";
-import AddEdit from "./components/AddEdit.vue";
-import mobileStore from "@/stores/MOBILE_EQUIPMENT/store";
-import {storeToRefs} from "pinia";
-import Drawer from "@/components/Drawer.vue"
-import { SCOPE} from "@/dataType";
-import Dialog from "primevue/dialog";
-import useAuthStore from "@/stores/authStore";
-import NoSelect from "@/components/NoSelect.vue";
-import CardDetail from "@/components/CardDetail.vue";
-import { OWNER_TYPE_LABEL } from "@/utils/constant";
 import ValidationForm from "./components/ValidationForm.vue";
 import Declaration from "./components/Declaration.vue";
+import InputText from 'primevue/inputtext';
+import Table from "@/components/table/index.vue";
+import AddEdit from "./components/AddEdit.vue";
+import dataStore from "@/stores/COLDHEAT_EQUIPMENT/store";
+import { useConfirm } from "primevue/useconfirm";
+import {storeToRefs} from "pinia";
+import Drawer from "@/components/Drawer.vue"
+import { SCOPE } from "@/dataType";
+import Dialog from "primevue/dialog";
+import useAuthStore from "@/stores/authStore";
+import { OWNER_TYPE_LABEL } from "@/utils/constant";
+import NoSelect from "@/components/NoSelect.vue";
+import CardDetail from "@/components/CardDetail.vue";
 
-const store = mobileStore()
-
+const store = dataStore()
 const {loadingData,loading} = storeToRefs(store)
+
 const auth = useAuthStore()
 const confirm = useConfirm();
 const searchText = ref('')
@@ -35,7 +33,9 @@ const onStatusChange = (status:string)=>{
     declarationStatus.value = status
 }
 
+
 const onDelete = (id:string)=>{
+    console.log("delete")
     confirm.require({
         message: 'Êtes vous sûre de vouloir supprimer cet équipement?',
         header: 'Supression',
@@ -59,25 +59,26 @@ const onShow = (id:string)=>{
 
 const columns = [
   { title: "Référence", key: "reference", show:true },
-  { title: "Type", key: "type" , show:true, formatter:(data:any)=>data?.frName},
-  { title: "Marque", key: "brand",show:true, formatter:(data:any)=>data?.frName },
-  { title: "Modèle", key: "model" , show:true , formatter:(data:any)=>data?.frName},
+  { title: "Type", key: "type",show:true,formatter:(data:any)=>data?.frName },
+  { title: "Marque", key: "brand" , show:true,formatter:(data:any)=>data?.frName },
+  { title: "Modèle", key: "model", show:true,formatter:(data:any)=>data?.frName },
   { title: "Performance", key: "equipmentPerformance" },
-  { title:"Unité", key:"measureUnit"},
-  { title: "Site", key: "nameOfTheSite" },
-  { title: "Propriétaire", key: "userId" },
-  { title: "Nom d'équipement", key: "equipmentName", show:true },
+  {title:"Unité", key:"measureUnit"},
   {title:"Type de propriété" , key:"ownerType"},
+  { title: "Déclarant", key: "userId" },
 ];
+
 onMounted(async ()=> await store.getData())
+
 watch(()=>auth.user,(newUser:any,oldUser:any)=>{
     store.getData()
     console.log("new user", newUser)
     console.log("old user", oldUser)
 })
-const filterData = computed(()=>{
-    const d = (Object as any).values(store.getMobileEquiment)
 
+const filterData = computed(()=>{
+    const d = (Object as any).values(store.getcoldHeatEquiment)
+    console.log("mobile equipemnt in store", d)
     const filter = (el:any)=>{
         return (
             el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
@@ -101,28 +102,23 @@ const filterData = computed(()=>{
             <div class="flex flex-row align-items-center">
                 <i class="ri-send-to-back" style="font-size:2rem"></i> 
                 <span class="mr-2">
-                    Configurations
+                    Configuration
                 </span>
                 <i class="pi pi-angle-right"></i>
                 <span>
-                    Équipements mobiles
+                    Équipements froids et chaleurs
                 </span>
             </div>
             <span class="p-input-icon-left" style="width:50%">
                 <i class="pi pi-search" />
-                <InputText 
-                    class="p-inputtext-sm" 
-                    v-model="searchText" 
-                    placeholder="Search" 
-                    style="border-radius:20px;width:100%" 
-                />
+                <InputText class="p-inputtext-sm" v-model="searchText" placeholder="Search" style="border-radius:20px;width:100%" />
             </span>
         </div>
         <div v-if="auth.user">
             <div class="pa-2">
                 <Table 
-                    title="Équipements mobiles" 
-                    subtitle="ce tableau liste tous les équipements mobiles" 
+                    title="Équipements froids et chaleurs" 
+                    subtitle="ce tableau liste de tous les équipements froids et chaleurs" 
                     :columns="columns.filter((el)=>el.show)" 
                     :data="filterData"
                     :onNew="()=>open = true"
@@ -153,7 +149,7 @@ const filterData = computed(()=>{
                 :selectedId="selectedId"
                 :item="selectedItem"
                 :onDelete="onDelete"
-                :category="SCOPE.MOBILE_EQUIPMENT"
+                :category="SCOPE.COLD_AND_HEAT_EQUIPMENT"
             >
                 <template v-slot:detail>
                     <div class="grid">
@@ -177,13 +173,6 @@ const filterData = computed(()=>{
                         </div>
                         <div class="md:col-6">
                             <CardDetail 
-                                icon="pi pi-shield" 
-                                title="Combustible utilisé" 
-                                :value="selectedItem?.fuelUsed?.frName" 
-                            />
-                        </div>
-                        <div class="md:col-6">
-                            <CardDetail 
                                 icon="pi pi-stop-circle" 
                                 title="performance" 
                                 :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" 
@@ -201,20 +190,6 @@ const filterData = computed(()=>{
                                 icon="pi pi-eject" 
                                 title="type de propriété" 
                                 :value="(OWNER_TYPE_LABEL as any)[selectedItem?.ownerType]" 
-                            />
-                        </div>
-                        <div class="md:col-6">
-                            <CardDetail 
-                                icon="pi pi-bolt" 
-                                title="nom de l équipement" 
-                                :value="selectedItem?.equipmentName" 
-                            />
-                        </div>
-                        <div class="md:col-6">
-                            <CardDetail 
-                                icon="pi pi-bolt" 
-                                title="année de production" 
-                                :value="selectedItem?.productionYear" 
                             />
                         </div>
                     </div>
