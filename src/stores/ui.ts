@@ -61,7 +61,7 @@ const useUiStore = defineStore('uiStore', {
                       url: '/reportingFrequency/all',
                       onSuccess: (data: any) => {
                         this.frequence = data
-                        console.log("frequence", data)
+                        // console.log("frequence", data)
                       },
                       onError: (err: any) => {
                         console.log('error', err)

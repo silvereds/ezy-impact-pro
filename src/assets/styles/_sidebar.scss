@@ -68,19 +68,34 @@
       }
     }
     .sidebar-content {
-      flex-grow: 1;
+      height:100%;
       padding: 10px 0;
+      padding-bottom:50vh;
+      flex-grow: 1;
+      overflow:auto;
     }
     .sidebar-footer {
+      position:absolute;
+      bottom:0px;
+      width:100%;
       height: $sidebar-footer-height;
       min-height: $sidebar-footer-height;
+      background-color:#0b1a2c;
       display: flex;
-      align-items: center;
-      padding: 0 20px;
+      flex-direction:column;
+      align-items: flex-end;
+      justify-content:flex-end;
+      padding: 0 0px;
       > span {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+      }
+      .footer-box{
+        display: flex;
+        padding:0px;
+        border-radius:0px;
+        width:100%;
       }
     }
   }

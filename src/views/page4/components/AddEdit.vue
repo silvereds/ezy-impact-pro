@@ -36,7 +36,7 @@ const onSave = ()=>{
         return
     }
     const toSend:any = {...d,model:d.modele , performanceReference:{...d.performanceReference,value:Number(performanceValue.value)}}
-    console.log("mobile equipment to save",toSend)
+    console.log("cold heat equipment to save",toSend)
     if(!props?.itemId){
         store.addData({data:toSend,callback:props?.callback})
     }else{

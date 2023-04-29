@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { dashboardRoute , scopeRoute, otherRoute } from '@/router';
+import { dashboardRoute , scopeRoute, otherRoute } from '@/router/router';
+import useAuthStore from '@/stores/authStore';
+import Button from 'primevue/button';
+const  auth = useAuthStore()
 </script>
 
 
@@ -27,7 +30,7 @@ import { dashboardRoute , scopeRoute, otherRoute } from '@/router';
                         </span>
                         <span class="menu-title"> {{  route?.title }} </span>
                         <span class="menu-suffix">
-                            <span class="badge secondary">Beta</span>
+                            <span class="badge secondary">Pro</span>
                         </span>
                     </RouterLink>
                 </li>
@@ -71,29 +74,23 @@ import { dashboardRoute , scopeRoute, otherRoute } from '@/router';
         </div>
         <div class="sidebar-footer">
             <div class="footer-box">
-                <div>
-                <img
-                    class="react-logo"
-                    src="https://user-images.githubusercontent.com/25878302/213938106-ca8f0485-3f30-4861-9188-2920ed7ab284.png"
-                    alt="react"
+               <Button 
+                    label="Nouveau Champs " 
+                    icon="pi pi-plus" 
+                    iconPos="left" 
+                    text 
+                    style="width:100%;color:#fff;border-radius:0px;height:3rem;text-align:left;background:#0b1a2c"
                 />
-                </div>
-                <div style="padding: 0 10px">
-                <span style="display: block; margin-bottom: 10px"
-                    >Pro sidebar is also available as a react package
-                </span>
-                <div style="margin-bottom: 15px">
-                    <img
-                    alt="preview badge"
-                    src="https://img.shields.io/github/stars/azouaoui-med/react-pro-sidebar?style=social"
-                    />
-                </div>
-                <div>
-                    <a href="https://github.com/azouaoui-med/react-pro-sidebar" target="_blank"
-                    >Check it out!</a
-                    >
-                </div>
-                </div>
+            </div>
+            <div class="footer-box">
+               <Button 
+                    label="Déconnexion" 
+                    icon="pi pi-sign-out" 
+                    iconPos="left" 
+                    text 
+                    style="width:100%;color:#fff;border-radius:0px;height:3rem;text-align:left;background:#0b1a2c"
+                    @click="auth.logout()" 
+                />
             </div>
         </div>
     </div>

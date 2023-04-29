@@ -10,7 +10,7 @@ import 'primevue/resources/primevue.min.css'
 //icons
 import 'primeicons/primeicons.css'
 import PrimeVue from 'primevue/config'
-import router from './router'
+import router from './router/router'
 import './assets/styles/styles.scss'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'

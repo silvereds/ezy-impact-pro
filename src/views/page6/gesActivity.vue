@@ -6,7 +6,7 @@ import Declaration from "./components/Declaration.vue";
 import InputText from 'primevue/inputtext';
 import Table from "@/components/table/index.vue";
 import AddEdit from "./components/AddEdit.vue";
-import dataStore from "@/stores/COLDHEAT_EQUIPMENT/store";
+import Store from "@/stores/GES_ACTIVITIES/store";
 import { useConfirm } from "primevue/useconfirm";
 import {storeToRefs} from "pinia";
 import Drawer from "@/components/Drawer.vue"
@@ -17,7 +17,7 @@ import { OWNER_TYPE_LABEL } from "@/utils/constant";
 import NoSelect from "@/components/NoSelect.vue";
 import CardDetail from "@/components/CardDetail.vue";
 
-const store = dataStore()
+const store = Store()
 const {loadingData,loading} = storeToRefs(store)
 
 const auth = useAuthStore()
@@ -37,7 +37,7 @@ const onStatusChange = (status:string)=>{
 const onDelete = (id:string)=>{
 
     confirm.require({
-        message: 'Êtes vous sûre de vouloir supprimer cet équipement?',
+        message: 'Êtes vous sûre de vouloir supprimer cette activité?',
         header: 'Supression',
         icon: 'pi pi-exclamation-triangle',
         acceptClass: 'p-button-danger',
@@ -54,17 +54,13 @@ const onShow = (id:string)=>{
     selectedItem.value = store.select(id)
     selectedId.value = id
     showDetail.value = true;
-    console.log("mobile equipment selected",selectedItem.value)
+    console.log("industrial activity selected",selectedItem.value)
 }
 
 const columns = [
-  { title: "Référence", key: "reference", show:true },
-  { title: "Type", key: "type",show:true,formatter:(data:any)=>data?.frName },
-  { title: "Marque", key: "brand" , show:true,formatter:(data:any)=>data?.frName },
-  { title: "Modèle", key: "model", show:true,formatter:(data:any)=>data?.frName },
-  { title: "Performance", key: "equipmentPerformance" },
-  {title:"Unité", key:"measureUnit"},
-  {title:"Type de propriété" , key:"ownerType"},
+  { title: "Référence", key: "reference",show:true },
+  { title: "Type d'activité", key: "activityType" , show:true , formatter:(data:any)=>data?.frName || "" },
+  { title: "Unité", key: "measurment", show:true,formatter:(data:any)=>data?.frName || ""},
   { title: "Déclarant", key: "userId" },
 ];
 
@@ -77,8 +73,8 @@ watch(()=>auth.user,(newUser:any,oldUser:any)=>{
 })
 
 const filterData = computed(()=>{
-    const d = (Object as any).values(store.getcoldHeatEquiment)
-    console.log("mobile equipemnt in store", d)
+    const d = (Object as any).values(store.getGesActivity)
+    
     const filter = (el:any)=>{
         return (
             el?.reference?.toLowerCase()?.includes(searchText.value?.toLowerCase())||
@@ -106,7 +102,7 @@ const filterData = computed(()=>{
                 </span>
                 <i class="pi pi-angle-right"></i>
                 <span>
-                    Équipements froids et chaleurs
+                    Activités À Emissions de GES
                 </span>
             </div>
             <span class="p-input-icon-left" style="width:50%">
@@ -117,8 +113,8 @@ const filterData = computed(()=>{
         <div v-if="auth.user">
             <div class="pa-2">
                 <Table 
-                    title="Équipements froids et chaleurs" 
-                    subtitle="ce tableau liste de tous les équipements froids et chaleurs" 
+                    title="Activités À Emissions de GES" 
+                    subtitle="ce tableau liste de tous les Activités À Emissions de GES" 
                     :columns="columns.filter((el)=>el.show)" 
                     :data="filterData"
                     :onNew="()=>open = true"
@@ -138,7 +134,7 @@ const filterData = computed(()=>{
                 <template #header>
                     <div class="flex flex-row align-items-center justify-content-start gap-2 w-100">
                         <i class="pi pi-plus" style="font-size:1rem;margin-right:0.5rem;font-weight:700" ></i>
-                        <span style="font-size:18px;font-weight:600"> Nouvel Equipement Mobile  </span>
+                        <span style="font-size:18px;font-weight:600"> Nouvel Activité  </span>
                     </div>
                 </template>
                 <AddEdit :callback="()=>open = false" />
@@ -149,35 +145,29 @@ const filterData = computed(()=>{
                 :selectedId="selectedId"
                 :item="selectedItem"
                 :onDelete="onDelete"
-                :category="SCOPE.COLD_AND_HEAT_EQUIPMENT"
+                :category="SCOPE.ACTIVITY_OF_FUGITIVE_EMISSION"
             >
                 <template v-slot:detail>
                     <div class="grid">
                         <div class="md:col-6">
                             <CardDetail 
-                                title="type" 
-                                :value="selectedItem?.type?.frName" 
+                                title="type d'activité" 
+                                :value="selectedItem?.activityType?.frName" 
                             />
                         </div>
                         <div class="md:col-6">
                             <CardDetail 
-                                title="marque" 
-                                :value="selectedItem?.brand?.frName" 
+                                title="référence" 
+                                :value="selectedItem?.reference" 
                             />
                         </div>
                         <div class="md:col-6">
                             <CardDetail 
-                                title="modèle" 
-                                :value="selectedItem?.model?.frName" 
+                                title="unité de mesure" 
+                                :value="selectedItem?.measurment?.frName" 
                             />
                         </div>
-                        <div class="md:col-6">
-                            <CardDetail 
-                                icon="pi pi-stop-circle" 
-                                title="performance" 
-                                :value="selectedItem?.equipmentPerformanceValue + ' ' + selectedItem?.equipmentPerformance?.frName" 
-                            />
-                        </div>
+                        
                         <div class="md:col-6">
                             <CardDetail 
                                 icon="pi pi-user" 
@@ -213,5 +203,4 @@ const filterData = computed(()=>{
         </div>
         <NoSelect v-else />
     </div>
-    
 </template>

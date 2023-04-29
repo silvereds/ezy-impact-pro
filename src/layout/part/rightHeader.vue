@@ -34,8 +34,8 @@ const toggle = (event:any) => {
 </script>
 
 <template>
-    <div class="flex flex-row">
-        <div class="card flex justify-content-center">
+    <div class="flex justify-content-end">
+        <div class="card flex justify-content-end">
             <div class="flex flex-row align-items-center cursor-pointer" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
                 <Avatar v-badge.danger="4" class="p-overlay-badge" image="https://primefaces.org/cdn/primevue/images/organization/walter.jpg"  shape="circle" />
                 <span class="ml-2"> Silvere tchoffo </span>

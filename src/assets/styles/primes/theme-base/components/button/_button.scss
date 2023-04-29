@@ -7,10 +7,12 @@
     transition: $formElementTransition;
     border-radius: $borderRadius;
     height:$buttonHeight;
+    font-weight:400;
     &:enabled:hover {
         background: $buttonHoverBg;
         color: $buttonTextHoverColor;
         border-color: $buttonHoverBorderColor;
+
     }
 
     &:enabled:active {
@@ -56,7 +58,7 @@
         background-color: transparent;
         color: $buttonBg;
         border-color: transparent;
-
+        font-weight:400;
         &:enabled:hover {
             background: rgba($buttonBg, $textButtonHoverBgOpacity);
             color: $buttonBg;
@@ -90,6 +92,7 @@
 
     .p-button-label {
         transition-duration: $transitionDuration;
+        font-weight:400;
     }
 
     .p-button-icon-left {

@@ -6,13 +6,16 @@ export enum STATUS {
 }
 export enum SCOPE {
   FIXE_EQUIPMENT = 'FIXED_EQUIPMENT',
+  INDUSTRIAL_ACTIVITY = 'INDUSTRIAL_ACTIVITY',
   ELECTRICAL_EQUIPMENT = 'ELECTRICAL_EQUIPMENT',
   MOBILE_EQUIPMENT = 'MOBILE_EQUIPMENT',
   COLD_HEAT_EQUIPMENT = 'COLD_HEAT_EQUIPMENT',
   INDUSTRIAL_ACTIVITIES = 'INDUSTRIAL_ACTIVITIES',
   BIOMAS_ACTIVITIES = 'BIOMASS_ACTIVITIES',
   GES_ACTIVITIES = 'GES_ACTIVITIES',
-  COLD_AND_HEAT_EQUIPMENT='COLD_AND_HEAT_EQUIPMENT'
+  COLD_AND_HEAT_EQUIPMENT='COLD_AND_HEAT_EQUIPMENT',
+  ACTIVITY_OF_FUGITIVE_EMISSION='ACTIVITY_OF_FUGITIVE_EMISSION',
+  BIOMASS_ACTIVITY='BIOMASS_ACTIVITY',
 }
 
 
@@ -118,6 +121,22 @@ export interface ACTIVITIES {
   type: Select | null
   unit: Select | null
   declarerId: string | null
+}
+
+export interface ACTIVITY{
+    reference: string|null,
+    typeOfActivity: UNIT | null,
+    unitOfMeasure: UNIT | null,
+    userId?: string |null,
+    ownerType: string|null,
+    equipmentName?: string|null,
+    enterpriseId?: string|null,
+    declarationStatus?: string|null,
+    emissionFactor?: number|null,
+    emissionFactorDataSource?: string,
+    reportingFrequencyId?: number|null,
+    hypotheses?: string,
+    adminComment?: string
 }
 
 export { STATUS as default }
